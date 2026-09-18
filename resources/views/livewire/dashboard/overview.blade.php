@@ -2,7 +2,6 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <x-app-logo-icon class="h-26 w-auto" />
             <div>
                 <h1 class="font-display text-2xl font-bold text-kb-text-primary">Dashboard</h1>
             @if ($passport)
@@ -12,7 +11,7 @@
         </div>
         @if (! $passport)
             <a href="{{ route('passport.index') }}">
-                <flux:button variant="primary" class="btn-gradient-primary rounded-xl">Atur Passport Bisnis</flux:button>
+                <flux:button variant="primary" class="btn-gradient-primary rounded-xl">Atur Profil Bisnis</flux:button>
             </a>
         @endif
     </div>
@@ -141,10 +140,10 @@
             </div>
             <flux:heading level="2" class="font-display text-xl font-bold mb-2 text-kb-text-primary">Selamat Datang di Kawan Bisnis!</flux:heading>
             <flux:text class="text-kb-text-muted mb-6 max-w-md mx-auto">
-                Mulai dengan mengisi Passport Bisnis agar AI Growth Team bisa menganalisis bisnis Anda.
+                Mulai dengan mengisi Profil Bisnis agar AI Growth Team bisa menganalisis bisnis Anda.
             </flux:text>
             <a href="{{ route('passport.index') }}">
-                <flux:button variant="primary" class="btn-gradient-primary rounded-xl">Atur Passport Bisnis</flux:button>
+                <flux:button variant="primary" class="btn-gradient-primary rounded-xl">Atur Profil Bisnis</flux:button>
             </a>
         </flux:card>
     @endif

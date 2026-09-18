@@ -97,9 +97,7 @@ Beyond `User`, the app has domain models: `BusinessPassport`, `BusinessSnapshot`
 - Vite manifest error: run `composer setup` or `composer dev` first.
 - `google_id` column in users table is nullable; password is nullable for OAuth-only users.
 
-## Convention Rules
+## Conventions
 
-- `.ai/rules/index.md` maps file globs to convention docs (models, tests, livewire, auth, etc.)
-- `.agents/skills/` has OpenCode skills for Flux UI, Livewire, Tailwind, testing, etc.
 - AI prompts and user-facing messages use Bahasa Indonesia (e.g., `UMKM` context).
 - Technical code comments and PHPDoc remain in English.

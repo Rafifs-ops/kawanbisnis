@@ -21,16 +21,16 @@
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| Backend | Laravel | 13.17 |
+| Backend | Laravel | 13.31 |
 | PHP | PHP | 8.3+ |
-| Livewire | Livewire | 4.1 |
-| UI Components | Flux UI | 2.13 |
+| Livewire | Livewire | 4.4 |
+| UI Components | Flux UI | 2.19 |
 | CSS | Tailwind CSS | 4 |
 | Build Tool | Vite + vite-plus | 8 |
-| Auth | Fortify | 1.37 |
+| Auth | Fortify | 1.39 |
 | OAuth | Socialite | 5.31 |
 | AI SDK | Laravel AI | 0.11.2 |
-| Admin Panel | Filament | 5 |
+| Admin Panel | Filament | 5.8 |
 | Testing | Pest | 5.1 |
 | Static Analysis | Larastan | Level 7 |
 | Code Style | Pint (laravel preset) | — |
@@ -101,15 +101,15 @@
 
 ```
 app/
-├── Actions/Fortify/          # Fortify action classes (CreateNewUser, etc.)
+├── Actions/Fortify/          # Fortify action classes (CreateNewUser, ResetUserPassword)
 ├── AI/Agents/                # 4 specialized AI agents
 │   ├── AnalyticsAgent.php
 │   ├── CustomerAgent.php
 │   ├── MarketingAgent.php
 │   └── StrategyAgent.php
-├── AI/Responses/             # Structured output DTOs
+├── AI/Responses/             # Structured output DTOs (5 result classes)
 ├── Concerns/                 # Shared traits
-├── Console/                  # Artisan commands
+├── Console/                  # Artisan commands (currently empty)
 ├── Filament/Resources/       # Filament admin resources
 ├── Http/Controllers/Auth/    # Google OAuth controller
 ├── Jobs/                     # ProcessGrowthDiagnosisJob
@@ -127,7 +127,10 @@ resources/
 └── views/
     ├── components/           # Shared Blade components
     ├── flux/                 # Custom Flux UI overrides
-    ├── layouts/              # 3 layout variants (sidebar, auth, guest)
+    ├── layouts/
+    │   ├── app/              # Sidebar and header layouts
+    │   ├── auth/             # Simple, split, and card auth layouts
+    │   └── guest.blade.php   # Guest layout (landing page)
     ├── livewire/             # Livewire component views
     └── partials/             # Head, settings headings
 ```
@@ -248,6 +251,7 @@ This starts 3 processes concurrently via `npx concurrently`:
 | `composer setup` | Full project setup (install, key, migrate, npm build) |
 | `composer dev` | Start server + queue + vite concurrently |
 | `composer test` | Run full CI: `config:clear` → `lint:check` → `types:check` → `test` |
+| `composer ci:check` | Alias for `composer test` (used in CI) |
 | `composer lint` | Fix code style (Pint parallel) |
 | `composer lint:check` | Check code style without fixing (Pint dry run) |
 | `composer types:check` | Run static analysis (PHPStan level 7) |
@@ -646,14 +650,4 @@ Manage the AI knowledge base entries used for RAG:
 
 ## CI/CD
 
-GitHub Actions workflow (`.github/workflows/tests.yml`):
-
-- **Triggers**: Push to `main`, all pull requests
-- **PHP version**: 8.5
-- **Node version**: 22
-- **Steps**:
-  1. Checkout code
-  2. Setup PHP (8.5) + Composer
-  3. Setup Node (22)
-  4. `composer setup`
-  5. `composer ci:check` (lint → types → tests)
+**Note**: No CI workflow file exists yet. When set up, it should run `composer setup` followed by `composer ci:check` (which runs lint → types → tests in order).
