@@ -14,6 +14,7 @@
 - [AI System](#ai-system)
 - [Database Schema](#database-schema)
 - [Admin Panel](#admin-panel)
+- [CI/CD](#cicd)
 
 ---
 
@@ -35,7 +36,7 @@
 | Static Analysis | Larastan | Level 7 |
 | Code Style | Pint (laravel preset) | — |
 | Database | SQLite (default), tests use `:memory:` | — |
-| AI Provider | OpenRouter (text: `nex-agi/nex-n2.5-pro:free`, embeddings: `nvidia/nemotron-3-embed-1b:free`) | — |
+| AI Provider | OpenRouter (text: `openrouter/free`, embeddings: `nvidia/nemotron-3-embed-1b:free`) — see `config/ai.php` | — |
 
 ### Extra Packages
 
@@ -91,11 +92,12 @@
 
 - **Livewire full-page components** for all dashboard and settings pages (rendered via `Route::livewire()`)
 - **Fortify** handles all auth flows (login, register, 2FA, passkeys, email verification) with standard Blade views
-- **Filament** runs as a separate admin panel at `/admin` with its own auth
+- **Filament** runs as a separate admin panel at `/admin` with its own login. Access is restricted to `users.is_admin = true` via `FilamentUser::canAccessPanel()`
 - **No REST API** — the app is entirely server-rendered via Livewire + standard HTTP
 - **Queued AI processing** — `ProcessGrowthDiagnosisJob` runs the multi-agent pipeline asynchronously
 - **RAG (Retrieval-Augmented Generation)** — `AgentKnowledge` model stores vector embeddings for domain-specific AI context
 - **Feedback Loop** — "Tandai Selesai" saves check-in feedback as `AgentKnowledge` with embedding, creating a growing knowledge base that improves future AI diagnoses
+- **Diagnosis status machine** — `growth_diagnoses.status` is `processing` → `completed` / `failed`; job is idempotent (clears prior `agent_analyses`/`action_plans` on retry); page polls while processing and supports re-run
 
 ### Directory Structure
 
@@ -115,9 +117,9 @@ app/
 ├── Jobs/                     # ProcessGrowthDiagnosisJob
 ├── Livewire/
 │   ├── Actions/              # Invokable action classes (Logout)
-│   ├── Dashboard/            # Dashboard pages (6 components)
+│   ├── Dashboard/            # Dashboard pages (7 components)
 │   ├── Landing/              # Landing page
-│   └── Settings/             # Settings pages (4 components)
+│   └── Settings/             # Settings pages (Profile, Security, DeleteUser, 2FA)
 ├── Models/                   # 9 Eloquent models
 └── Providers/                # Service providers
 
@@ -143,12 +145,12 @@ resources/
 
 | Feature | Description |
 |---------|-------------|
-| **Business Passport** | Create and manage business profile (name, type, products, sales channels, constraints) |
+| **Profil Bisnis** | Create and manage business profile (name, type, products, sales channels, constraints) |
 | **Data Snapshots** | Input period-based business metrics (revenue, orders, AOV, customer breakdown, product performance) |
-| **Growth Goals** | Set growth targets (Increase Sales, Retention, AOV, Margin) with status tracking |
+| **Growth Goals** | Set growth targets (Increase Sales, Retention, AOV, Margin). Targets use `nominal` (Rp) units except Margin (`percent`); Retention has no target metric (`target_metrics = null`) |
 | **AI Growth Diagnosis** | Multi-agent AI analysis producing structured diagnosis with root causes, opportunities, and KPI targets |
-| **Action Plans** | AI-generated prioritized action items with detailed step-by-step scheduling (day-specific dates), timelines (7-day / 30-day), and KPI targets. Grouped by diagnosis for history tracking |
-| **Tandai Selesai** | Mark action plans as completed, report actual results, KPI achievement, and learning notes. Feedback is automatically saved as AI knowledge (RAG) for future analysis |
+| **Action Plans** | AI-generated prioritized action items with detailed step-by-step scheduling (day-specific dates), timelines (7-day / 30-day), and KPI targets. Grouped by diagnosis for history tracking. Steps timeline is collapsed by default — expand via **"Lihat Action Plan"** |
+| **Tandai Selesai** | Mark action plans as completed, report actual results, KPI achievement, and learning notes. Feedback is automatically saved as AI knowledge (RAG) for future analysis. After submit, redirects back to the check-in page (read-only view), not the dashboard |
 
 ### Authentication
 
@@ -164,13 +166,16 @@ resources/
 
 | Feature | Description |
 |---------|-------------|
+| **Admin-only access** | Only users with `is_admin = true` can open `/admin` (guests → login, others → 403) |
 | **Agent Knowledge Management** | CRUD for AI knowledge base entries with embedding generation |
 | **Type Badge System** | Color-coded agent types (analytics, customer, marketing, strategy) |
 | **RAG Embedding Generation** | Generate vector embeddings from admin panel for RAG system |
 
 ### Design
 
-- Dark mode by default with brand color system (`kb-blue-electric`, `kb-blue-light`, `kb-black-blue`)
+- **Light mode forced** (`flux.appearance = localStorage` is set to `light` in `partials/head.blade.php`)
+- Page background: brand light blue `#6fc6fa` (all layouts + Filament admin body)
+- Brand color system (`kb-blue-electric`, `kb-blue-light`, `kb-black-blue`); white cards on blue page bg
 - Custom CSS animations: scroll-reveal, word-reveal, gradient text, glassmorphism, hover-lift
 - Responsive design with mobile sidebar
 - Respects `prefers-reduced-motion`
@@ -205,26 +210,45 @@ cp .env.example .env        # if .env doesn't exist
 php artisan key:generate
 php artisan migrate --force
 npm install
-npm run build
+npm run build               # runs `vp build` (vite-plus)
+```
+
+Seed an admin account (optional, for local):
+
+```bash
+php artisan db:seed         # creates admin@example.com / password (is_admin = true)
+```
+
+Promote an existing user to admin:
+
+```bash
+php artisan tinker
+User::where('email', 'owner@domain.com')->update(['is_admin' => true]);
 ```
 
 ### Environment Configuration
 
-Copy `.env.example` to `.env` and configure:
+Copy `.env.example` to `.env` (done by `composer setup`) and fill in keys as needed. Defaults match the app:
 
 ```env
-# Database (SQLite by default)
+APP_NAME=KawanBisnis
+APP_LOCALE=id
+APP_FALLBACK_LOCALE=id
+APP_FAKER_LOCALE=id_ID
+
+# Database (SQLite default; switch to MySQL by uncommenting DB_* lines)
 DB_CONNECTION=sqlite
-DB_DATABASE=/path/to/database.sqlite
+
+# AI / OpenRouter — required for real diagnosis; tests fake AI (no key)
+OPENROUTER_API_KEY=
 
 # Google OAuth (optional)
-GOOGLE_CLIENT_ID=your-client-id
-GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 GOOGLE_REDIRECT_URL=http://localhost:8000/auth/google/callback
-
-# AI / OpenRouter
-OPENROUTER_API_KEY=your-openrouter-key
 ```
+
+Do not commit a populated `.env` (secrets: `APP_KEY`, `OPENROUTER_API_KEY`, Google OAuth, mail password).
 
 ### Start Development Server
 
@@ -255,6 +279,8 @@ This starts 3 processes concurrently via `npx concurrently`:
 | `composer lint` | Fix code style (Pint parallel) |
 | `composer lint:check` | Check code style without fixing (Pint dry run) |
 | `composer types:check` | Run static analysis (PHPStan level 7) |
+
+> Build tool is **vite-plus**: use `npm run build` / `npm run dev` (aliases `vp build` / `vp dev`), not the bare `vite` CLI.
 
 ### Testing
 
@@ -306,8 +332,9 @@ This application does **not** have a REST API. All routes are web routes serving
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
 | `GET` | `/dashboard` | `dashboard` | Dashboard overview |
-| `GET` | `/dashboard/passport` | `passport.index` | Business Passport management |
+| `GET` | `/dashboard/passport` | `passport.index` | Profil Bisnis management |
 | `GET` | `/dashboard/snapshot/create` | `snapshot.create` | Create data snapshot + growth goal |
+| `GET` | `/dashboard/diagnosis` | `diagnosis.history` | List diagnosis history |
 | `GET` | `/dashboard/diagnosis/{growthDiagnosis}` | `diagnosis.show` | View AI diagnosis results |
 | `GET` | `/dashboard/action-plan` | `action-plan.index` | List all action plans |
 | `GET` | `/dashboard/check-in/{actionPlan}/create` | `check-in.create` | Mark action plan as completed and report results |
@@ -318,8 +345,9 @@ This application does **not** have a REST API. All routes are web routes serving
 |--------|-----|------|-------------|-----------|
 | `GET` | `/settings` | — | Redirect to `/settings/profile` | `auth` |
 | `GET` | `/settings/profile` | `profile.edit` | Edit profile (name, email) | `auth` |
-| `GET` | `/settings/appearance` | `appearance.edit` | Theme settings | `auth`, `verified` |
 | `GET` | `/settings/security` | `security.edit` | Password, 2FA, passkeys | `auth`, `verified`, `password.confirm` |
+
+> No Appearance settings page — Flux appearance is forced to `light` in `partials/head.blade.php`.
 
 ### Fortify Auth Routes (auto-registered)
 
@@ -361,23 +389,27 @@ This application does **not** have a REST API. All routes are web routes serving
 
 ### Filament Admin Panel Routes (auto-registered at `/admin`)
 
+Access requires `users.is_admin = true`. Guests are redirected to `/admin/login`; authenticated non-admins receive **403**.
+
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
-| `GET` | `/admin` | `filament.admin.home` | Admin dashboard |
-| `GET` | `/admin/login` | `filament.admin.auth.login` | Admin login |
+| `GET` | `/admin` | `filament.admin.pages.dashboard` | Admin dashboard (admin only) |
+| `GET` | `/admin/login` | `filament.admin.auth.login` | Admin login (Livewire page) |
 | `POST` | `/admin/logout` | `filament.admin.auth.logout` | Admin logout |
-| `GET` | `/admin/agent-knowledges` | — | List agent knowledge entries |
-| `GET` | `/admin/agent-knowledges/create` | — | Create agent knowledge entry |
-| `GET` | `/admin/agent-knowledges/{record}/edit` | — | Edit agent knowledge entry |
+| `GET` | `/admin/agent-knowledge` | `filament.admin.resources.agent-knowledge.index` | List agent knowledge entries |
+| `GET` | `/admin/agent-knowledge/create` | `…agent-knowledge.create` | Create agent knowledge entry |
+| `GET` | `/admin/agent-knowledge/{record}/edit` | `…agent-knowledge.edit` | Edit agent knowledge entry |
+
+Admin login is Livewire-based (`Filament\Auth\Pages\Login::authenticate`) — there is no classic `POST /admin/login` route.
 
 ### Livewire Internal Routes (auto-registered)
 
 | Method | URI | Description |
 |--------|-----|-------------|
-| `POST` | `/livewire/update` | Livewire AJAX update handler |
-| `POST` | `/livewire/upload-file` | File upload handler |
-| `GET` | `/livewire/preview-file` | File preview handler |
-| `GET` | `/livewire/livewire.js` | Livewire JavaScript asset |
+| `POST` | `/livewire-{hash}/update` | Livewire AJAX update handler (hash is content-based) |
+| `POST` | `/livewire-{hash}/upload-file` | File upload handler |
+| `GET` | `/livewire-{hash}/preview-file/{filename}` | File preview handler |
+| `GET` | `/livewire-{hash}/livewire.js` | Livewire JavaScript asset |
 | `GET` | `/flux/flux.js` | Flux UI JavaScript asset |
 
 ---
@@ -388,12 +420,12 @@ This application does **not** have a REST API. All routes are web routes serving
 
 | Layout | File | Usage |
 |--------|------|-------|
-| **Sidebar** | `resources/views/layouts/app/sidebar.blade.php` | All dashboard pages (primary layout) |
-| **Header** | `resources/views/layouts/app/header.blade.php` | Alternate top-nav layout (available) |
-| **Auth (Simple)** | `resources/views/layouts/auth/simple.blade.php` | All auth pages (centered, max-w-sm) |
-| **Auth (Split)** | `resources/views/layouts/auth/split.blade.php` | Two-column auth (quote + form) |
-| **Auth (Card)** | `resources/views/layouts/auth/card.blade.php` | Card-wrapped auth |
-| **Guest** | `resources/views/layouts/guest.blade.php` | Landing page (minimal) |
+| **Sidebar** | `resources/views/layouts/app/sidebar.blade.php` | All dashboard pages (primary layout). Page bg: `#6fc6fa`, sidebar: `#9DE6FA` |
+| **Header** | `resources/views/layouts/app/header.blade.php` | Alternate top-nav layout (available). Page bg: `#6fc6fa`, mobile sidebar: `#9DE6FA` |
+| **Auth (Simple)** | `resources/views/layouts/auth/simple.blade.php` | All auth pages (centered, max-w-sm). Page bg: `#6fc6fa` |
+| **Auth (Split)** | `resources/views/layouts/auth/split.blade.php` | Two-column auth (quote + form). Page bg: `#6fc6fa` |
+| **Auth (Card)** | `resources/views/layouts/auth/card.blade.php` | Card-wrapped auth. Page bg: `#6fc6fa` |
+| **Guest** | `resources/views/layouts/guest.blade.php` | Landing page (minimal). Page bg: `#6fc6fa` |
 
 ### Page Hierarchy
 
@@ -427,7 +459,7 @@ AUTHENTICATED PAGES (Sidebar Layout)
 │   ├── Latest diagnosis preview
 │   ├── Quick action cards
 │   └── Action plan summary
-├── Business Passport (/dashboard/passport)
+├── Profil Bisnis (/dashboard/passport)
 │   ├── Business profile (name, type, description, target customer)
 │   ├── Products (add/remove with name, price, margin)
 │   ├── Sales channels (Instagram, Tokopedia, etc.)
@@ -438,19 +470,21 @@ AUTHENTICATED PAGES (Sidebar Layout)
 │   ├── Customer breakdown (new vs returning)
 │   ├── Product performance data
 │   └── Growth goal (type, target, unit)
+├── Riwayat Diagnosis (/dashboard/diagnosis)
+│   └── All diagnoses (any status: processing / completed / failed) with resume links
 ├── Diagnosis Show (/dashboard/diagnosis/{id})
-│   ├── Processing status (polling every 3s)
-│   ├── Diagnosis summary
-│   ├── Business diagnosis
-│   ├── Root causes
-│   ├── Key findings
-│   ├── Opportunities
-│   ├── Top 3 Recommendations (with step-by-step timeline)
-│   ├── KPI metrics
-│   └── Agent analyses (analytics, customer, marketing, strategy)
+│   ├── Status: processing / completed / failed (polls every 3s while processing)
+│   ├── Per-agent pipeline status (waiting / running / completed / failed)
+│   ├── Re-run diagnosis (when failed or to refresh)
+│   ├── Ringkasan (masalah utama + prioritas)
+│   ├── Dasar Analisis (periode, target, angka)
+│   ├── Temuan (fakta) vs Dugaan Penyebab (hipotesis)
+│   ├── Tiga Rekomendasi (judul, alasan, KPI)
+│   └── Link to Action Plan (daily steps live here only)
 ├── Action Plans (/dashboard/action-plan)
 │   ├── Grouped by diagnosis (Diagnosis ke-1, ke-2, etc.)
-│   ├── Each plan shows: title, priority %, timeline, steps timeline
+│   ├── Each plan shows: title, priority %, timeline
+│   ├── Steps timeline collapsed by default → expand with "Lihat Action Plan"
 │   ├── Steps with day-specific dates and status indicators
 │   └── "Tandai Selesai" button per plan
 └── Tandai Selesai (/dashboard/check-in/{id}/create)
@@ -458,15 +492,14 @@ AUTHENTICATED PAGES (Sidebar Layout)
     ├── Actual results
     ├── KPI achievement
     ├── Learning notes
-    └── Auto-saves to AgentKnowledge (RAG)
+    ├── Auto-saves to AgentKnowledge (RAG)
+    └── After submit → stays on check-in page (read-only "Sudah Ditandai Selesai")
 
 SETTINGS PAGES (Sidebar Layout + Settings Nav)
 ├── Profile (/settings/profile)
 │   ├── Name / email edit
 │   ├── Email verification status
 │   └── Account deletion
-├── Appearance (/settings/appearance)
-│   └── Theme toggle (light/dark/system)
 └── Security (/settings/security)
     ├── Password change
     ├── Two-factor authentication setup
@@ -476,17 +509,20 @@ SETTINGS PAGES (Sidebar Layout + Settings Nav)
     └── Passkey management (add/remove)
 ```
 
+> Note: the Appearance settings page was removed; Flux appearance is forced to `light` via `partials/head.blade.php`.
+
 ### Navigation
 
 ```
 Sidebar (authenticated):
-└── Platform
-    └── Dashboard (/dashboard)
+├── Dashboard (/dashboard)
+├── Action Plan (/dashboard/action-plan)
+├── Riwayat Diagnosis (/dashboard/diagnosis)
+└── Profil Bisnis (/dashboard/passport)
 
 Settings nav (authenticated):
 ├── Profile (/settings/profile)
-├── Security (/settings/security)
-└── Appearance (/settings/appearance)
+└── Security (/settings/security)
 
 User menu (desktop sidebar footer / mobile header dropdown):
 ├── Settings (/settings/profile)
@@ -568,8 +604,10 @@ recommendations[] → {
 
 | Model | Provider | Use |
 |-------|----------|-----|
-| `nex-agi/nex-n2.5-pro:free` | OpenRouter | Text generation (agents) |
-| `nvidia/nemotron-3-embed-1b:free` | OpenRouter | Embedding generation (RAG) |
+| `openrouter/free` | OpenRouter | Text generation (agents) — default in `config/ai.php` |
+| `nvidia/nemotron-3-embed-1b:free` | OpenRouter | Embedding generation (RAG, 2048-dim) |
+
+Model names live in `config/ai.php` (`providers.openrouter.models`). Prefer that file over prose docs if they conflict. Real AI calls require `OPENROUTER_API_KEY`; tests always fake the agents (`AnalyticsAgent::fake(...)` etc.) and never hit OpenRouter.
 
 ---
 
@@ -596,11 +634,11 @@ AgentKnowledge (standalone, with vector embeddings)
 
 | Table | Purpose | Key Fields |
 |-------|---------|------------|
-| `users` | User accounts | `google_id` (nullable), `password` (nullable for OAuth) |
+| `users` | User accounts | `google_id` (nullable), `password` (nullable for OAuth), `is_admin` (bool, default false — Filament panel access) |
 | `business_passports` | Business profiles | `business_name`, `business_type`, `products` (JSON), `sales_channels` (JSON), `constraints` (JSON) |
 | `business_snapshots` | Period business data | `period_start`, `period_end`, `revenue`, `total_orders`, `average_order_value`, `new_vs_returning_customers` (JSON), `product_performances` (JSON) |
-| `growth_goals` | Business targets | `goal_type`, `target_metrics` (JSON), `status` |
-| `growth_diagnoses` | AI diagnosis results | `summary_diagnosis`, `business_diagnosis`, `key_findings` (JSON), `root_causes` (JSON), `opportunities` (JSON), `kpi_metrics` (JSON) |
+| `growth_goals` | Business targets | `goal_type`, `target_metrics` (JSON, null for Retention), `status` |
+| `growth_diagnoses` | AI diagnosis results | `status` (`processing` / `completed` / `failed`), `summary_diagnosis`, `business_diagnosis`, `key_findings` (JSON), `root_causes` (JSON), `opportunities` (JSON), `kpi_metrics` (JSON) |
 | `agent_analyses` | Individual agent outputs | `agent_type`, `findings` (JSON), `hypotheses` (JSON), `confidence_score` |
 | `action_plans` | Recommended actions | `title`, `description`, `priority_rank`, `priority_score`, `timeline_days`, `target_kpi` (JSON), `steps` (JSON: day_offset, title, description, date, day_name), `approval_status` |
 | `check_in_feedbacks` | Progress check-ins | `checkin_date`, `actual_result` (JSON), `kpi_achieved` (JSON), `learning_notes` |
@@ -616,13 +654,26 @@ AgentKnowledge (standalone, with vector embeddings)
 
 ## Admin Panel
 
-The Filament 5 admin panel runs at `/admin` with its own authentication.
+The Filament 5 admin panel runs at `/admin` with its own Livewire login page.
 
-### Access
+### Access (admin only)
 
-- URL: `http://localhost:8000/admin`
-- Login: Separate from main app auth
-- Dark mode: Enabled by default
+Only users with **`users.is_admin = true`** can access the panel:
+
+| Actor | Behavior |
+|-------|----------|
+| Guest | Redirected to `/admin/login` |
+| Authenticated non-admin | **403 Forbidden** on all `/admin` routes; login form rejects credentials (same error as wrong password) |
+| Admin (`is_admin = true`) | Full access |
+
+How it is enforced:
+
+- `App\Models\User` implements `Filament\Models\Contracts\FilamentUser` and returns true only for the `admin` panel when `is_admin`
+- `is_admin` is **not** mass-assignable (not in `#[Fillable]`) — registration cannot self-promote
+- No dedicated admin guard — Filament uses the default `web` guard
+- Seed local admin: `php artisan db:seed` → `admin@example.com` / `password`
+- Promote production owner: `User::where('email', $x)->update(['is_admin' => true])`
+- Tests: `tests/Feature/AdminPanelAccessTest.php`
 
 ### Resources
 
@@ -630,7 +681,7 @@ The Filament 5 admin panel runs at `/admin` with its own authentication.
 
 Manage the AI knowledge base entries used for RAG:
 
-- **Navigation**: "Pengetahuan Agen" (`/admin/agent-knowledges`)
+- **Navigation**: "Pengetahuan Agen" (`/admin/agent-knowledge`)
 - **Table**: Agent type (color-coded badge), title, content, created_at
 - **Form**: Agent type (select), title, content (textarea)
 - **Actions**:
@@ -650,4 +701,20 @@ Manage the AI knowledge base entries used for RAG:
 
 ## CI/CD
 
-**Note**: No CI workflow file exists yet. When set up, it should run `composer setup` followed by `composer ci:check` (which runs lint → types → tests in order).
+GitHub Actions workflow: [`.github/workflows/tests.yml`](.github/workflows/tests.yml)
+
+| Item | Value |
+|------|-------|
+| Triggers | `push` to `main`, all `pull_request` |
+| PHP | 8.5 |
+| Node | 22 |
+| Setup | `composer setup` |
+| Checks | `composer ci:check` → `config:clear` → Pint (`lint:check`) → PHPStan level 7 → Pest |
+
+Never skip lint or static analysis before tests — `composer test` fails first if either fails.
+
+### Testing notes
+
+- Feature tests get `RefreshDatabase` automatically (`tests/Pest.php`); Unit tests do not.
+- AI is always faked — pipeline tests use `AnalyticsAgent::fake()` / `CustomerAgent::fake()` / `MarketingAgent::fake()` / `StrategyAgent::fake()` (optionally `->preventStrayPrompts()`). No `OPENROUTER_API_KEY` needed in CI.
+- Tests run with `QUEUE_CONNECTION=sync`, `CACHE_STORE=array`, `MAIL_MAILER=array`, DB `sqlite :memory:`.

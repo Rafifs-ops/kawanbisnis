@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Livewire\Dashboard\ActionPlanIndex;
 use App\Livewire\Dashboard\CheckInCreate;
+use App\Livewire\Dashboard\DiagnosisHistory;
 use App\Livewire\Dashboard\DiagnosisShow;
 use App\Livewire\Dashboard\Overview;
 use App\Livewire\Dashboard\PassportIndex;
@@ -21,13 +22,16 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('dashboard', Overview::class)->name('dashboard');
 
-    // Business Passport
+    // Profil Bisnis
     Route::livewire('dashboard/passport', PassportIndex::class)->name('passport.index');
 
     // Snapshot & Goal
     Route::livewire('dashboard/snapshot/create', SnapshotCreate::class)->name('snapshot.create');
 
-    // Diagnosis
+    // Diagnosis history
+    Route::livewire('dashboard/diagnosis', DiagnosisHistory::class)->name('diagnosis.history');
+
+    // Diagnosis detail
     Route::livewire('dashboard/diagnosis/{growthDiagnosis}', DiagnosisShow::class)->name('diagnosis.show');
 
     // Action Plan

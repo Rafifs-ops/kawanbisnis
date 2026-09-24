@@ -17,6 +17,8 @@ class CheckInCreate extends Component
 {
     public ActionPlan $actionPlan;
 
+    public ?CheckInFeedback $feedback = null;
+
     public string $checkin_date = '';
 
     public string $actual_result = '';
@@ -28,6 +30,7 @@ class CheckInCreate extends Component
     public function mount(ActionPlan $actionPlan): void
     {
         $this->actionPlan = $actionPlan->load('growthDiagnosis.growthGoal.businessPassport');
+        $this->feedback = $actionPlan->checkInFeedbacks()->latest('id')->first();
         $this->checkin_date = now()->format('Y-m-d');
     }
 
@@ -54,7 +57,7 @@ class CheckInCreate extends Component
 
         Flux::toast(variant: 'success', text: 'Berhasil disimpan! Hasil eksekusi telah ditambahkan sebagai knowledge untuk analisis AI berikutnya.');
 
-        $this->redirect(route('dashboard'));
+        $this->redirect(route('check-in.create', $this->actionPlan));
     }
 
     private function saveAsKnowledge(CheckInFeedback $feedback): void

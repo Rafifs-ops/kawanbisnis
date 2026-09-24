@@ -51,23 +51,24 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 'panels::head.end',
-                fn() => new HtmlString(
+                fn () => new HtmlString(
                     <<<'HTML'
 <style>
     :root {
-        --fi-body-bg: #0a1116 !important;
+        --fi-body-bg: #6fc6fa !important;
     }
     .dark {
-        --fi-body-bg: #0a1116 !important;
+        --fi-body-bg: #6fc6fa !important;
     }
-    /* Blue-dominant gradient for Filament admin */
+    body {
+        background-color: #6fc6fa !important;
+    }
     body::before {
         content: '';
         position: fixed;
         inset: 0;
         z-index: -1;
-        background: linear-gradient(160deg, #0a1116 0%, #081e8e 40%, #0f3fb0 65%, #6fc6fa 100%);
-        opacity: 0.35;
+        background: #6fc6fa;
     }
     /* Ensure sidebar stays solid */
     .fi-sidebar {

@@ -3,9 +3,9 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="text-kb-text-primary font-sans antialiased">
-        {{-- Blue-dominant aurora mesh — Opsi B --}}
-        <div class="fixed inset-0 -z-10" style="background: var(--gradient-kb-hero);"></div>
+    <body class="text-kb-text-primary font-sans antialiased bg-[#6fc6fa]">
+        {{-- Page background --}}
+        <div class="fixed inset-0 -z-10 bg-[#6fc6fa]"></div>
 
         <div class="relative">
             {{ $slot }}

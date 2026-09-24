@@ -85,7 +85,7 @@
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-kb-text-muted">
             <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate class="text-kb-blue-light hover:underline">{{ __('Log in') }}</flux:link>
+            <flux:link :href="route('login')" wire:navigate class="text-kb-blue-electric hover:underline">{{ __('Log in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>

@@ -153,13 +153,15 @@ it('updates diagnosis with all 6 sections', function () {
     $goal = GrowthGoal::factory()->create(['business_passport_id' => $passport->id]);
     $diagnosis = GrowthDiagnosis::factory()->create([
         'growth_goal_id' => $goal->id,
+        'status' => 'processing',
         'summary_diagnosis' => 'Sedang diproses...',
     ]);
 
     ProcessGrowthDiagnosisJob::dispatchSync($diagnosis);
 
     $fresh = $diagnosis->fresh();
-    expect($fresh->summary_diagnosis)->toBe('Revenue stabil tapi pelanggan menurun')
+    expect($fresh->status)->toBe('completed')
+        ->and($fresh->summary_diagnosis)->toBe('Revenue stabil tapi pelanggan menurun')
         ->and($fresh->business_diagnosis)->toBe('Revenue stabil tapi pelanggan menurun')
         ->and($fresh->root_causes)->toBe(['Harga terlalu tinggi', 'Layanan pelanggan buruk'])
         ->and($fresh->opportunities)->toBe(['Ekspasi ke Shopee', 'Program loyalitas'])
@@ -218,11 +220,17 @@ it('returns early when no snapshot exists', function () {
     $user = User::factory()->create();
     $passport = BusinessPassport::factory()->create(['user_id' => $user->id]);
     $goal = GrowthGoal::factory()->create(['business_passport_id' => $passport->id]);
-    $diagnosis = GrowthDiagnosis::factory()->create(['growth_goal_id' => $goal->id]);
+    $diagnosis = GrowthDiagnosis::factory()->create([
+        'growth_goal_id' => $goal->id,
+        'status' => 'processing',
+        'summary_diagnosis' => 'Sedang diproses...',
+    ]);
 
     ProcessGrowthDiagnosisJob::dispatchSync($diagnosis);
 
-    expect(AgentAnalysis::where('growth_diagnosis_id', $diagnosis->id)->count())->toBe(0);
+    $fresh = $diagnosis->fresh();
+    expect(AgentAnalysis::where('growth_diagnosis_id', $diagnosis->id)->count())->toBe(0)
+        ->and($fresh->status)->toBe('failed');
 });
 
 it('logs error and throws when agent fails', function () {

@@ -15,13 +15,19 @@ class GrowthGoalFactory extends Factory
 
     public function definition(): array
     {
+        $goalType = fake()->randomElement(['Increase Sales', 'Retention', 'AOV', 'Margin']);
+
         return [
             'business_passport_id' => BusinessPassport::factory(),
-            'goal_type' => fake()->randomElement(['Increase Sales', 'Retention', 'AOV', 'Margin']),
-            'target_metrics' => [
-                'target' => fake()->numberBetween(1000000, 20000000),
-                'unit' => 'nominal',
-            ],
+            'goal_type' => $goalType,
+            'target_metrics' => $goalType === 'Retention'
+                ? null
+                : [
+                    'target' => $goalType === 'Margin'
+                        ? fake()->randomFloat(1, 1, 50)
+                        : fake()->numberBetween(1000000, 20000000),
+                    'unit' => $goalType === 'Margin' ? 'percent' : 'nominal',
+                ],
             'status' => 'active',
         ];
     }

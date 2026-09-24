@@ -87,7 +87,7 @@
             >
                 <div class="space-y-6">
                     <div class="flex flex-col items-center space-y-4">
-                        <div class="p-0.5 w-auto rounded-full border border-kb-blue-light/10 bg-kb-black-blue shadow-sm">
+                        <div class="p-0.5 w-auto rounded-full border border-kb-border bg-white shadow-sm">
                             <div class="p-2.5 rounded-full border border-kb-blue-light/20 overflow-hidden bg-kb-blue-electric/20 relative">
                                 <div class="flex items-stretch absolute inset-0 w-full h-full divide-x [&>div]:flex-1 divide-kb-blue-light/20 justify-around opacity-50">
                                     @for ($i = 1; $i <= 5; $i++)
@@ -101,7 +101,7 @@
                                     @endfor
                                 </div>
 
-                                <flux:icon.qr-code class="relative z-20 dark:text-accent-foreground"/>
+                                <flux:icon.qr-code class="relative z-20"/>
                             </div>
                         </div>
 
@@ -155,15 +155,12 @@
                         <div class="flex justify-center">
                             <div class="relative w-64 overflow-hidden border rounded-lg border-kb-blue-light/20 aspect-square">
                                 @empty($qrCodeSvg)
-                                    <div class="absolute inset-0 flex items-center justify-center bg-kb-black-blue animate-pulse">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-zinc-100 animate-pulse">
                                         <flux:icon.loading/>
                                     </div>
                                 @else
                                 <div x-data class="flex items-center justify-center h-full p-4">
-                                    <div
-                                        class="bg-kb-black-blue p-3 rounded"
-                                        :style="($flux.appearance === 'dark' || ($flux.appearance === 'system' && $flux.dark)) ? 'filter: invert(1) brightness(1.5)' : ''"
-                                    >
+                                    <div class="bg-white p-3 rounded">
                                             {!! $qrCodeSvg !!}
                                         </div>
                                     </div>
@@ -185,7 +182,7 @@
                         <div class="space-y-4">
                             <div class="relative flex items-center justify-center w-full">
                                 <div class="absolute inset-0 w-full h-px top-1/2 bg-kb-blue-light/20"></div>
-                                <span class="relative px-2 text-sm bg-kb-black-blue text-kb-white-ghost/60">
+                                <span class="relative px-2 text-sm bg-white text-kb-text-muted">
                                     {{ __('or, enter the code manually') }}
                                 </span>
                             </div>
@@ -249,7 +246,7 @@
                             <div class="flex items-center justify-between p-4 {{ ! $loop->last ? 'border-b border-kb-blue-light/10' : '' }}">
                                 <div class="flex items-center gap-4">
                                     <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-kb-blue-electric/10">
-                                        <flux:icon.key class="size-5 text-kb-blue-light" />
+                                        <flux:icon.key class="size-5 text-kb-blue-electric" />
                                     </div>
                                     <div class="space-y-1">
                                         <div class="flex items-center gap-2.5">
@@ -280,7 +277,7 @@
                         @empty
                             <div class="p-8 text-center">
                                 <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-kb-blue-electric/10">
-                                    <flux:icon.key class="size-7 text-kb-blue-light/50" />
+                                    <flux:icon.key class="size-7 text-kb-blue-electric/50" />
                                 </div>
                                 <p class="font-medium text-kb-white-ghost">{{ __('No passkeys yet') }}</p>
                                 <flux:text class="mt-1 text-kb-white-ghost/60">{{ __('Add a passkey to sign in without a password') }}</flux:text>

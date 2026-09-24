@@ -10,6 +10,7 @@ use App\Models\GrowthGoal;
 use App\Models\User;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -20,9 +21,9 @@ class SnapshotCreate extends Component
 
     public string $period_end = '';
 
-    public float $revenue = 0;
+    public ?float $revenue = 0;
 
-    public int $total_orders = 0;
+    public ?int $total_orders = 0;
 
     public int $new_customers = 0;
 
@@ -34,19 +35,45 @@ class SnapshotCreate extends Component
 
     public bool $isProcessing = false;
 
-    public function getAverageOrderValueProperty(): float
+    #[Computed]
+    public function averageOrderValue(): float
     {
-        if ($this->total_orders <= 0) {
+        return $this->calculateAverageOrderValue();
+    }
+
+    private function calculateAverageOrderValue(): float
+    {
+        // Livewire unsets typed props when the client sends '' (cleared number input).
+        $totalOrders = $this->total_orders ?? 0;
+        $revenue = $this->revenue ?? 0;
+
+        if ($totalOrders <= 0) {
             return 0;
         }
 
-        return round($this->revenue / $this->total_orders);
+        return round($revenue / $totalOrders);
     }
 
     public function mount(): void
     {
         $this->period_start = now()->subMonths(3)->startOfMonth()->format('Y-m-d');
         $this->period_end = now()->subMonth()->endOfMonth()->format('Y-m-d');
+    }
+
+    public function updatedGoalType(): void
+    {
+        $this->target_value = 0;
+        $this->resetValidation('target_value');
+    }
+
+    public function isTargetInputHidden(): bool
+    {
+        return $this->goal_type === 'Retention';
+    }
+
+    public function targetUnit(): string
+    {
+        return $this->goal_type === 'Margin' ? 'percent' : 'nominal';
     }
 
     public function submit(): void
@@ -57,7 +84,9 @@ class SnapshotCreate extends Component
             'revenue' => 'required|numeric|min:0',
             'total_orders' => 'required|integer|min:0',
             'goal_type' => 'required|in:Increase Sales,Retention,AOV,Margin',
-            'target_value' => 'required|numeric|min:0',
+            'target_value' => $this->isTargetInputHidden()
+                ? 'nullable|numeric|min:0'
+                : 'required|numeric|min:0',
         ]);
 
         /** @var User $user */
@@ -66,7 +95,7 @@ class SnapshotCreate extends Component
         $passport = $user->businessPassport;
 
         if (! $passport) {
-            Flux::toast(variant: 'error', text: 'Silakan lengkapi Business Passport terlebih dahulu.');
+            Flux::toast(variant: 'error', text: 'Silakan lengkapi Profil Bisnis terlebih dahulu.');
 
             return;
         }
@@ -79,7 +108,7 @@ class SnapshotCreate extends Component
             'period_end' => $validated['period_end'],
             'revenue' => $validated['revenue'],
             'total_orders' => $validated['total_orders'],
-            'average_order_value' => $this->average_order_value,
+            'average_order_value' => $this->calculateAverageOrderValue(),
             'new_vs_returning_customers' => [
                 'new' => $this->new_customers,
                 'returning' => $this->returning_customers,
@@ -91,10 +120,12 @@ class SnapshotCreate extends Component
         $goal = GrowthGoal::create([
             'business_passport_id' => $passport->id,
             'goal_type' => $validated['goal_type'],
-            'target_metrics' => [
-                'target' => $validated['target_value'],
-                'unit' => 'nominal',
-            ],
+            'target_metrics' => $this->isTargetInputHidden()
+                ? null
+                : [
+                    'target' => $validated['target_value'],
+                    'unit' => $this->targetUnit(),
+                ],
             'status' => 'active',
         ]);
 
@@ -102,6 +133,7 @@ class SnapshotCreate extends Component
         /** @var GrowthDiagnosis $diagnosis */
         $diagnosis = GrowthDiagnosis::create([
             'growth_goal_id' => $goal->id,
+            'status' => 'processing',
             'summary_diagnosis' => 'Sedang diproses...',
         ]);
 

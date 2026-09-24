@@ -34,11 +34,21 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
 
     public function handle(): void
     {
+        // Clear partial results from prior attempts so retries stay idempotent.
+        $this->diagnosis->agentAnalyses()->delete();
+        $this->diagnosis->actionPlans()->delete();
+        $this->diagnosis->update(['status' => 'processing']);
+
         /** @var BusinessPassport $passport */
         $passport = $this->diagnosis->growthGoal->businessPassport;
         $snapshot = $passport->snapshots()->latest()->first();
 
         if (! $snapshot) {
+            $this->diagnosis->update([
+                'status' => 'failed',
+                'summary_diagnosis' => 'Data snapshot tidak ditemukan untuk diagnosis ini.',
+            ]);
+
             return;
         }
 
@@ -136,11 +146,25 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
 
         // 6. Update diagnosis with all 6 sections
         $this->diagnosis->update([
+            'status' => 'completed',
             'summary_diagnosis' => $strategyRes['business_diagnosis'] ?? '',
             'business_diagnosis' => $strategyRes['business_diagnosis'] ?? null,
             'root_causes' => $strategyRes['root_causes'] ?? null,
             'opportunities' => $strategyRes['growth_opportunity'] ?? null,
             'kpi_metrics' => $strategyRes['kpi_metrics'] ?? null,
+        ]);
+    }
+
+    public function failed(?Throwable $exception): void
+    {
+        Log::error('Growth diagnosis job failed permanently', [
+            'diagnosis_id' => $this->diagnosis->id,
+            'error' => $exception?->getMessage(),
+        ]);
+
+        $this->diagnosis->update([
+            'status' => 'failed',
+            'summary_diagnosis' => 'Proses diagnosis gagal. Silakan coba lagi.',
         ]);
     }
 
@@ -221,6 +245,15 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
                 'diagnosis_id' => $this->diagnosis->id,
                 'error' => $e->getMessage(),
             ]);
+
+            // Mark failed on the final attempt so the UI can notify the user.
+            // Earlier queue retries reset status to processing at the start of handle().
+            if ($this->attempts() >= $this->tries) {
+                $this->diagnosis->update([
+                    'status' => 'failed',
+                    'summary_diagnosis' => 'Proses diagnosis gagal. Silakan coba lagi.',
+                ]);
+            }
 
             throw $e;
         }

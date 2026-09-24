@@ -1,9 +1,9 @@
 {
     "Menu": "Menu",
-    "Dashboard": "Dasbor",
-    "Business Passport": "Passport Bisnis",
+    "Dashboard": "Dashboard",
+    "Business Passport": "Profil Bisnis",
     "Snapshot": "Snapshot",
-    "Action Plan": "Rencana Aksi",
+    "Action Plan": "Action Plan",
     "Settings": "Pengaturan",
     "Log out": "Keluar",
     "Search": "Cari",
@@ -85,12 +85,6 @@
     "Remove passkey": "Hapus passkey",
     "Are you sure you want to remove the passkey \":name\"? You will no longer be able to use it to sign in.": "Apakah Anda yakin ingin menghapus passkey \":name\"? Anda tidak akan bisa lagi menggunakannya untuk masuk.",
     "Cancel": "Batal",
-    "Appearance settings": "Pengaturan tampilan",
-    "Appearance": "Tampilan",
-    "Update the appearance settings for your account": "Perbarui pengaturan tampilan untuk akun Anda",
-    "Light": "Terang",
-    "Dark": "Gelap",
-    "System": "Sistem",
     "Delete account": "Hapus akun",
     "Delete your account and all of its resources": "Hapus akun Anda dan semua sumber dayanya",
     "Are you sure you want to delete your account?": "Apakah Anda yakin ingin menghapus akun Anda?",
@@ -114,6 +108,5 @@
     "Registering...": "Mendaftarkan...",
     "Manage your profile and account settings": "Kelola profil dan pengaturan akun Anda",
     "Profile": "Profil",
-    "Security": "Keamanan",
-    "Appearance": "Tampilan"
+    "Security": "Keamanan"
 }

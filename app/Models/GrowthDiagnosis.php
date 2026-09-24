@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property int $growth_goal_id
+ * @property string $status
  * @property string $summary_diagnosis
  * @property string|null $business_diagnosis
  * @property list<string>|null $key_findings
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 #[Fillable([
     'growth_goal_id',
+    'status',
     'summary_diagnosis',
     'business_diagnosis',
     'key_findings',

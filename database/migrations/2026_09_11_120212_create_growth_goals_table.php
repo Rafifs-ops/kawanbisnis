@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('business_passport_id')->constrained()->cascadeOnDelete();
             $table->string('goal_type'); // Increase Sales, Retention, AOV, Margin
-            $table->json('target_metrics')->nullable(); // {target: 5000000, unit: 'nominal'}
+            $table->json('target_metrics')->nullable(); // {target: 5000000, unit: 'nominal'|'percent'} — null when goal_type is Retention
             $table->string('status')->default('active'); // active, achieved, expired
             $table->timestamps();
         });

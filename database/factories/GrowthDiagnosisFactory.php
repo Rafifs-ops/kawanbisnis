@@ -17,6 +17,7 @@ class GrowthDiagnosisFactory extends Factory
     {
         return [
             'growth_goal_id' => GrowthGoal::factory(),
+            'status' => 'completed',
             'summary_diagnosis' => fake()->paragraph(),
             'key_findings' => [fake()->sentence()],
             'root_causes' => [fake()->sentence()],

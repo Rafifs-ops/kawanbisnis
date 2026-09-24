@@ -1,8 +1,30 @@
 <div class="flex h-full w-full flex-1 flex-col gap-6">
     <div>
-            <h1 class="font-display text-2xl font-bold text-kb-text-primary">Business Passport</h1>
-            <flux:text class="text-kb-text-muted">Identitas dan konteks bisnis Anda untuk AI Growth Team.</flux:text>
-        </div>
+        <h1 class="font-display text-2xl font-bold text-kb-text-primary">Profil Bisnis</h1>
+        <flux:text class="text-kb-text-muted">Identitas dan konteks bisnis Anda untuk AI Growth Team.</flux:text>
+    </div>
+
+        @if ($justSavedFirstTime)
+            <flux:card class="p-5 rounded-2xl border-emerald-200 bg-emerald-50">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
+                            <flux:icon name="check-badge" class="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div>
+                            <flux:heading level="2" class="font-display font-semibold text-kb-text-primary">Profil bisnis berhasil disimpan</flux:heading>
+                            <flux:text class="text-sm text-kb-text-muted">Langkah berikutnya: isi data penjualan agar AI dapat menganalisis bisnis Anda.</flux:text>
+                        </div>
+                    </div>
+                    <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
+                        <flux:button variant="primary" class="btn-gradient-primary rounded-xl">
+                            Lanjut Isi Data Penjualan
+                            <flux:icon name="arrow-right" class="w-4 h-4 ml-1" />
+                        </flux:button>
+                    </a>
+                </div>
+            </flux:card>
+        @endif
 
         <form wire:submit="save" class="space-y-8">
             {{-- Profil Bisnis --}}
@@ -100,11 +122,11 @@
                         <flux:input type="number" wire:model="team_capacity" />
                     </flux:field>
                 </div>
-                <p class="text-sm text-white font-semibold">Kendala membantu AI memberikan rekomendasi yang realistis sesuai kemampuan Anda.</p>
+                <p class="text-sm text-kb-text-muted font-medium">Kendala membantu AI memberikan rekomendasi yang realistis sesuai kemampuan Anda.</p>
             </flux:card>
 
             <div class="flex justify-end">
-                <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl">Simpan Passport Bisnis</flux:button>
+                <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl">Simpan</flux:button>
             </div>
         </form>
 

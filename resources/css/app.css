@@ -20,20 +20,20 @@
     --color-kb-blue-light: #6FC6FA;
     --color-kb-black-blue: #0A1116;
 
-    /* Surface elevation — darker than bg for AA contrast on blue gradient */
+    /* Surface elevation — light mode: white cards on neutral bg */
     --color-kb-surface-0: transparent;
-    --color-kb-surface-1: rgba(8, 14, 28, 0.72);
-    --color-kb-surface-2: rgba(8, 14, 28, 0.82);
-    --color-kb-surface-3: rgba(8, 14, 28, 0.92);
-    --color-kb-surface-solid: #0a0f1c;
-    --color-kb-border: rgba(111, 198, 250, 0.12);
-    --color-kb-border-subtle: rgba(111, 198, 250, 0.07);
+    --color-kb-surface-1: #ffffff;
+    --color-kb-surface-2: #f4f4f5;
+    --color-kb-surface-3: #e4e4e7;
+    --color-kb-surface-solid: #ffffff;
+    --color-kb-border: #e4e4e7;
+    --color-kb-border-subtle: #f0f0f1;
 
-    /* Text on blue/dark backgrounds */
-    --color-kb-text-primary: #EEF4F8;
-    --color-kb-text-secondary: #B8CCD6;
-    --color-kb-text-muted: #7A95A5;
-    --color-kb-text-faint: #4A6575;
+    /* Text on light backgrounds */
+    --color-kb-text-primary: #09090b;
+    --color-kb-text-secondary: #3f3f46;
+    --color-kb-text-muted: #71717a;
+    --color-kb-text-faint: #a1a1aa;
 
     /* Shade helpers for gradients / hover / opacity */
     --color-kb-blue-electric-5: oklch(from #081E8E l c h / 0.05);
@@ -47,50 +47,21 @@
     --color-kb-blue-light-50: oklch(from #6FC6FA l c h / 0.50);
     --color-kb-blue-light-80: oklch(from #6FC6FA l c h / 0.80);
 
-    /* Flux UI accent overrides */
-    --color-accent: #6FC6FA;
-    --color-accent-content: #6FC6FA;
-    --color-accent-foreground: #0A1116;
+    /* Flux UI accent overrides — blue accent, white text */
+    --color-accent: #081E8E;
+    --color-accent-content: #ffffff;
+    --color-accent-foreground: #ffffff;
 
-    /* Zinc overrides — blue-tinted for blue-dominant bg */
-    --color-zinc-50: #0c1a2e;
-    --color-zinc-100: #0e1f36;
-    --color-zinc-200: #122540;
-    --color-zinc-300: #1a3050;
-    --color-zinc-400: #2a4a6a;
-    --color-zinc-500: #4a7090;
-    --color-zinc-600: #6a90b0;
-    --color-zinc-700: #90b0c8;
-    --color-zinc-800: #b8d0e0;
-    --color-zinc-900: #d8e8f0;
-    --color-zinc-950: #eef4f8;
+    /* Gradients — brand blue (buttons / small accents only) */
+    --gradient-kb-primary: linear-gradient(135deg, #081E8E 0%, #0F3FB0 100%);
+    --gradient-kb-primary-reverse: linear-gradient(135deg, #0F3FB0 0%, #081E8E 100%);
 
-    /* Gradients — blue-dominant */
-    --gradient-kb-primary: linear-gradient(135deg, #081E8E 0%, #6FC6FA 100%);
-    --gradient-kb-primary-reverse: linear-gradient(135deg, #6FC6FA 0%, #081E8E 100%);
+    /* Landing/guest: brand light blue */
+    --gradient-kb-hero: #6fc6fa;
 
-    /* Landing/guest: aurora mesh — blue blobs dominate */
-    --gradient-kb-hero: radial-gradient(circle at 15% 15%, rgba(111, 198, 250, 0.45), transparent 45%),
-                        radial-gradient(circle at 85% 25%, rgba(8, 30, 142, 0.65), transparent 55%),
-                        radial-gradient(circle at 50% 90%, rgba(111, 198, 250, 0.25), transparent 50%),
-                        linear-gradient(180deg, #0d2266 0%, #0a1116 100%);
-
-    /* Dashboard/auth: diagonal gradient — blue fills the view */
-    --gradient-kb-app: linear-gradient(160deg, #0a1116 0%, #081e8e 40%, #0f3fb0 65%, #6fc6fa 100%);
-
-    /* Calmer version for auth forms (lower opacity on blue) */
-    --gradient-kb-auth: radial-gradient(circle at 30% 20%, rgba(8, 30, 142, 0.55), transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(111, 198, 250, 0.2), transparent 45%),
-                        linear-gradient(160deg, #0a1116 0%, #0c1a40 50%, #0a1116 100%);
-}
-
-/* ─── Dark Mode Overrides ─────────────────────────────── */
-@layer theme {
-    .dark {
-        --color-accent: #6FC6FA;
-        --color-accent-content: #6FC6FA;
-        --color-accent-foreground: #0A1116;
-    }
+    /* Dashboard/auth: brand light blue */
+    --gradient-kb-app: #6fc6fa;
+    --gradient-kb-auth: #6fc6fa;
 }
 
 /* ─── Base ────────────────────────────────────────────── */
@@ -110,6 +81,7 @@
     body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background-color: #6fc6fa;
     }
 
     /* Tabular numbers for KPI / data displays */
@@ -139,17 +111,11 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-kb-blue-light ring-offset-2 ring-offset-kb-surface-solid;
 }
 
-.dark input:focus[data-flux-control],
-.dark textarea:focus[data-flux-control],
-.dark select:focus[data-flux-control] {
-    @apply ring-kb-blue-light ring-offset-kb-surface-solid;
-}
-
 /* ─── Global CSS Custom Properties ───────────────────── */
 :root {
     --color-primary: #081E8E;
     --color-secondary: #6FC6FA;
-    --color-base: #0A1116;
+    --color-base: #6fc6fa;
 }
 
 /* ─── Gradient Utility Classes ───────────────────────── */
@@ -174,13 +140,14 @@ select:focus[data-flux-control] {
 }
 
 .btn-gradient-primary {
-    background: var(--gradient-kb-primary);
+    background: #081E8E;
     color: #ffffff;
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-gradient-primary:hover {
-    box-shadow: 0 0 24px 4px oklch(from #6FC6FA l c h / 0.35);
+    background: #0a2ab5;
+    box-shadow: 0 4px 16px -2px oklch(from #081E8E l c h / 0.35);
     transform: scale(1.02);
 }
 
@@ -247,10 +214,10 @@ select:focus[data-flux-control] {
 /* Pulse glow for CTA */
 @keyframes pulse-glow {
     0%, 100% {
-        box-shadow: 0 0 0 0 oklch(from #6FC6FA l c h / 0.4);
+        box-shadow: 0 0 0 0 oklch(from #081E8E l c h / 0.3);
     }
     50% {
-        box-shadow: 0 0 24px 6px oklch(from #6FC6FA l c h / 0.2);
+        box-shadow: 0 0 24px 6px oklch(from #081E8E l c h / 0.15);
     }
 }
 
@@ -328,36 +295,26 @@ select:focus[data-flux-control] {
     animation: gradient-shift 4s ease-in-out infinite;
 }
 
-/* Glassmorphism card — strong enough for AA on blue gradient */
+/* Glassmorphism card — light mode */
 .glass {
-    background: rgba(8, 14, 28, 0.65);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(16px) saturate(1.2);
     -webkit-backdrop-filter: blur(16px) saturate(1.2);
-    border: 1px solid rgba(111, 198, 250, 0.12);
+    border: 1px solid rgba(8, 30, 142, 0.1);
 }
 
-.dark .glass {
-    background: rgba(8, 14, 28, 0.65);
-    border: 1px solid rgba(111, 198, 250, 0.15);
-}
-
-/* Glass with stronger opacity for forms/content on blue bg */
+/* Glass with stronger opacity for forms/content */
 .glass-solid {
-    background: rgba(6, 10, 22, 0.80);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(1.3);
     -webkit-backdrop-filter: blur(20px) saturate(1.3);
-    border: 1px solid rgba(111, 198, 250, 0.10);
+    border: 1px solid rgba(8, 30, 142, 0.1);
 }
 
 /* Soft shadow with brand tint */
 .shadow-brand {
-    box-shadow: 0 4px 24px -2px oklch(from #081E8E l c h / 0.15),
-                0 2px 8px -2px oklch(from #6FC6FA l c h / 0.06);
-}
-
-.dark .shadow-brand {
-    box-shadow: 0 4px 24px -2px oklch(from #081E8E l c h / 0.2),
-                0 2px 8px -2px oklch(from #6FC6FA l c h / 0.08);
+    box-shadow: 0 4px 24px -2px oklch(from #081E8E l c h / 0.12),
+                0 2px 8px -2px oklch(from #081E8E l c h / 0.06);
 }
 
 /* Hover scale microinteraction */
@@ -368,7 +325,7 @@ select:focus[data-flux-control] {
 
 .hover-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px -4px oklch(from #6FC6FA l c h / 0.18);
+    box-shadow: 0 8px 32px -4px oklch(from #081E8E l c h / 0.12);
 }
 
 /* Button glow on hover */
@@ -377,7 +334,7 @@ select:focus[data-flux-control] {
 }
 
 .btn-glow:hover {
-    box-shadow: 0 0 24px 4px oklch(from #6FC6FA l c h / 0.35);
+    box-shadow: 0 4px 16px -2px oklch(from #081E8E l c h / 0.3);
     transform: scale(1.02);
 }
 
@@ -389,9 +346,9 @@ select:focus[data-flux-control] {
 .wire-shimmer {
     background: linear-gradient(
         90deg,
-        oklch(from #081E8E l c h / 0.1) 25%,
-        oklch(from #6FC6FA l c h / 0.15) 50%,
-        oklch(from #081E8E l c h / 0.1) 75%
+        oklch(from #081E8E l c h / 0.08) 25%,
+        oklch(from #081E8E l c h / 0.14) 50%,
+        oklch(from #081E8E l c h / 0.08) 75%
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
@@ -414,12 +371,12 @@ select:focus[data-flux-control] {
 }
 
 .ai-orb::before {
-    background: radial-gradient(circle, oklch(from #6FC6FA l c h / 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, oklch(from #081E8E l c h / 0.2) 0%, transparent 70%);
     animation-delay: 0s;
 }
 
 .ai-orb::after {
-    background: radial-gradient(circle, oklch(from #081E8E l c h / 0.4) 0%, transparent 60%);
+    background: radial-gradient(circle, oklch(from #081E8E l c h / 0.3) 0%, transparent 60%);
     animation-delay: 1.5s;
 }
 
@@ -435,7 +392,7 @@ select:focus[data-flux-control] {
     left: 100%;
     width: 32px;
     height: 2px;
-    background: linear-gradient(90deg, #6FC6FA, transparent);
+    background: linear-gradient(90deg, #081E8E, transparent);
     animation: connector-pulse 2s ease-in-out infinite;
 }
 
@@ -445,9 +402,9 @@ select:focus[data-flux-control] {
 }
 
 .card-glow:hover {
-    border-color: oklch(from #6FC6FA l c h / 0.3);
-    box-shadow: 0 0 0 1px oklch(from #6FC6FA l c h / 0.1),
-                0 4px 24px -2px oklch(from #081E8E l c h / 0.25);
+    border-color: oklch(from #081E8E l c h / 0.35);
+    box-shadow: 0 0 0 1px oklch(from #081E8E l c h / 0.08),
+                0 4px 24px -2px oklch(from #081E8E l c h / 0.12);
 }
 
 /* Number display for KPI / stats */
@@ -471,17 +428,17 @@ select:focus[data-flux-control] {
     transform: translateX(-50%);
     width: 200px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #6FC6FA, transparent);
-    opacity: 0.4;
+    background: linear-gradient(90deg, transparent, #081E8E, transparent);
+    opacity: 0.25;
 }
 
 /* Timeline node pulse for running agent */
 @keyframes node-pulse {
     0%, 100% {
-        box-shadow: 0 0 0 0 oklch(from #6FC6FA l c h / 0.4);
+        box-shadow: 0 0 0 0 oklch(from #081E8E l c h / 0.35);
     }
     50% {
-        box-shadow: 0 0 0 8px oklch(from #6FC6FA l c h / 0);
+        box-shadow: 0 0 0 8px oklch(from #081E8E l c h / 0);
     }
 }
 
@@ -515,24 +472,24 @@ select:focus[data-flux-control] {
 }
 
 /* ─── Flux UI Sidebar Active State ─────────────────────── */
-.dark [data-flux-sidebar-item][data-current] {
-    background: linear-gradient(135deg, #081E8E 0%, #0a4fd0 100%) !important;
+[data-flux-sidebar-item][data-current] {
+    background: #081E8E !important;
     color: #ffffff !important;
     font-weight: 600 !important;
-    box-shadow: 0 4px 16px -2px rgba(8, 30, 142, 0.4);
+    box-shadow: 0 4px 16px -2px rgba(8, 30, 142, 0.25);
     border-color: transparent !important;
 }
 
-.dark [data-flux-sidebar-item][data-current] svg {
+[data-flux-sidebar-item][data-current] svg {
     color: #ffffff !important;
 }
 
-.dark [data-flux-sidebar-item][data-current]:hover {
-    background: linear-gradient(135deg, #0a2ab5 0%, #1565e0 100%) !important;
-    box-shadow: 0 4px 20px -2px rgba(8, 30, 142, 0.5);
+[data-flux-sidebar-item][data-current]:hover {
+    background: #0a2ab5 !important;
+    box-shadow: 0 4px 20px -2px rgba(8, 30, 142, 0.3);
 }
 
-.dark [data-flux-sidebar-item][data-current] [data-content] {
+[data-flux-sidebar-item][data-current] [data-content] {
     color: #ffffff !important;
     font-weight: 600 !important;
 }

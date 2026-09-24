@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Business Passport')]
+#[Title('Profil Bisnis')]
 class PassportIndex extends Component
 {
     public string $business_name = '';
@@ -39,6 +39,8 @@ class PassportIndex extends Component
     public float $new_product_margin = 0;
 
     public ?BusinessPassport $passport = null;
+
+    public bool $justSavedFirstTime = false;
 
     public function mount(): void
     {
@@ -77,6 +79,8 @@ class PassportIndex extends Component
             ],
         ];
 
+        $isFirstSave = $this->passport === null;
+
         if ($this->passport) {
             $this->passport->update($data);
         } else {
@@ -87,7 +91,9 @@ class PassportIndex extends Component
             $this->passport = $passport;
         }
 
-        Flux::toast(variant: 'success', text: 'Business Passport berhasil disimpan.');
+        $this->justSavedFirstTime = $isFirstSave;
+
+        Flux::toast(variant: 'success', text: 'Profil bisnis berhasil disimpan.');
     }
 
     public function addProduct(): void

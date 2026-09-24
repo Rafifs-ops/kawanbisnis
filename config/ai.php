@@ -102,7 +102,10 @@ return [
         'gemini' => [
             'driver' => 'gemini',
             'key' => env('GEMINI_API_KEY'),
-            'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
+            'models' => [
+                'text' => 'gemini-2.5-flash',
+                'embedding' => 'gemini-embedding-2',
+            ],
         ],
 
         'groq' => [
@@ -144,7 +147,7 @@ return [
             'key' => env('OPENROUTER_API_KEY'),
             'models' => [
                 'text' => [
-                    'default' => 'nex-agi/nex-n2.5-pro:free',
+                    'default' => 'openrouter/free',
                 ],
                 'embeddings' => [
                     'default' => 'nvidia/nemotron-3-embed-1b:free',

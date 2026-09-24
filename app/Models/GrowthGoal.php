@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property int $business_passport_id
  * @property string $goal_type
- * @property array{target?: float, unit?: string}|null $target_metrics
+ * @property array{target?: float, unit?: 'nominal'|'percent'}|null $target_metrics
  * @property string $status
  * @property-read BusinessPassport $businessPassport
  * @property-read Collection<int, GrowthDiagnosis> $growthDiagnoses

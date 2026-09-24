@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
     <body class="min-h-screen antialiased">
-        {{-- Blue-dominant diagonal gradient — Opsi A (content area only) --}}
-        <div class="fixed inset-0 -z-10" style="background: var(--gradient-kb-app);"></div>
+        {{-- Page background --}}
+        <div class="fixed inset-0 -z-10 bg-[#6fc6fa]"></div>
 
-        {{-- Sidebar stays solid Black Blue --}}
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-kb-border bg-kb-surface-solid">
+        {{-- Sidebar --}}
+        <flux:sidebar sticky collapsible="mobile" class="bg-[#bef1ff]">
             <flux:sidebar.header class="my-3 mx-auto">
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Menu')" class="grid">
+                <flux:sidebar.group heading="Menu" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="identification" :href="route('passport.index')" :current="request()->routeIs('passport.index')" wire:navigate>
-                        {{ __('Identitas Bisnis') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="document" :href="route('snapshot.create')" :current="request()->routeIs('snapshot.create')" wire:navigate>
-                        {{ __('Data Penjualan Bisnis') }}
+                        Dashboard
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="list-bullet" :href="route('action-plan.index')" :current="request()->routeIs('action-plan.index')" wire:navigate>
-                        {{ __('Action Plan') }}
+                        Action Plan
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="clock" :href="route('diagnosis.history')" :current="request()->routeIs('diagnosis.history') || request()->routeIs('diagnosis.show')" wire:navigate>
+                        Riwayat Diagnosis
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="identification" :href="route('passport.index')" :current="request()->routeIs('passport.index')" wire:navigate>
+                        Profil Bisnis
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
