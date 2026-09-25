@@ -126,8 +126,7 @@
                     <flux:button variant="subtle">Batal</flux:button>
                 </a>
                 <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl">
-                    <flux:icon name="check-circle" class="w-4 h-4 mr-1" />
-                    Simpan & Jadikan Knowledge
+                    Simpan
                 </flux:button>
             </div>
         </form>
