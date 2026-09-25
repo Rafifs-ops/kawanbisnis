@@ -1,157 +1,210 @@
-<div class="flex h-full w-full flex-1 flex-col gap-6">
+<div class="flex h-full w-full flex-1 flex-col gap-6" x-data="{ showAddProductModal: @entangle('showAddProductModal') }">
     <div>
         <h1 class="font-display text-2xl font-bold text-kb-text-primary">Profil Bisnis</h1>
-        <flux:text class="text-kb-text-muted">Identitas dan konteks bisnis Anda untuk AI Growth Team.</flux:text>
+        <p class="text-sm text-kb-text-muted mt-1">Identitas dan konteks bisnis Anda untuk AI Growth Team.</p>
     </div>
 
-        @if ($justSavedFirstTime)
-            <flux:card class="p-5 rounded-2xl border-emerald-200 bg-emerald-50">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
-                            <flux:icon name="check-badge" class="w-5 h-5 text-emerald-600" />
-                        </div>
-                        <div>
-                            <flux:heading level="2" class="font-display font-semibold text-kb-text-primary">Profil bisnis berhasil disimpan</flux:heading>
-                            <flux:text class="text-sm text-kb-text-muted">Langkah berikutnya: isi data penjualan agar AI dapat menganalisis bisnis Anda.</flux:text>
-                        </div>
+    @if ($justSavedFirstTime)
+        <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     </div>
-                    <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
-                        <flux:button variant="primary" class="btn-gradient-primary rounded-xl">
-                            Lanjut Isi Data Penjualan
-                            <flux:icon name="arrow-right" class="w-4 h-4 ml-1" />
-                        </flux:button>
-                    </a>
+                    <div>
+                        <h2 class="font-display font-semibold text-kb-text-primary text-base">Profil bisnis berhasil
+                            disimpan</h2>
+                        <p class="text-sm text-kb-text-muted mt-0.5">Langkah berikutnya: isi data penjualan agar AI
+                            dapat menganalisis bisnis Anda.</p>
+                    </div>
                 </div>
-            </flux:card>
-        @endif
+                <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
+                    <button type="button"
+                        class="btn-gradient-primary rounded-xl px-4 py-2.5 text-sm font-medium text-white inline-flex items-center gap-1.5 shadow-sm hover:opacity-90 transition-opacity">
+                        <span>Lanjut Isi Data Penjualan</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </a>
+            </div>
+        </div>
+    @endif
 
-        <form wire:submit="save" class="space-y-8">
-            {{-- Profil Bisnis --}}
-            <flux:card class="p-6 space-y-4 rounded-2xl border-kb-border bg-kb-surface-1">
-                <h1 class="font-display text-lg font-semibold text-kb-text-primary">Profil Bisnis</h1>
+    <form wire:submit="save" class="space-y-8">
+        {{-- Profil Bisnis --}}
+        <div class="p-6 space-y-4 rounded-2xl border border-kb-border bg-kb-surface-1 shadow-sm">
+            <h2 class="font-display text-lg font-semibold text-kb-text-primary">Profil Bisnis</h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <flux:field>
-                        <flux:label>Nama Bisnis</flux:label>
-                        <flux:input wire:model="business_name" placeholder="Contoh: Warung Teh Manis" />
-                        <flux:error name="business_name" />
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label>Jenis Bisnis</flux:label>
-                        <flux:select wire:model="business_type">
-                            <option value="F&B">F&B (Makanan & Minuman)</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Retail">Retail</option>
-                            <option value="Service">Service / Jasa</option>
-                        </flux:select>
-                    </flux:field>
-                </div>
-
-                <flux:field>
-                    <flux:label>Target Customer</flux:label>
-                    <flux:input wire:model="target_customer" placeholder="Contoh: Mahasiswa 18-24 tahun" />
-                </flux:field>
-
-                <flux:field>
-                    <flux:label>Deskripsi Bisnis</flux:label>
-                    <flux:textarea wire:model="business_description" rows="3" placeholder="Ceritakan singkat tentang bisnis Anda..." />
-                </flux:field>
-            </flux:card>
-
-            {{-- Produk --}}
-            <flux:card class="p-6 space-y-4 rounded-2xl border-kb-border bg-kb-surface-1">
-                <div class="flex items-center justify-between">
-                    <h1 class="font-display text-lg font-semibold text-kb-text-primary">Produk Utama</h1>
-                    <flux:button type="button" variant="subtle" size="xs" wire:click="$set('showAddProductModal', true)">
-                        + Tambah Produk
-                    </flux:button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-kb-text-primary">Nama Bisnis</label>
+                    <input type="text" wire:model="business_name" placeholder="Contoh: Warung Teh Manis"
+                        class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                    @error('business_name')
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                @if (count($products) > 0)
-                    <flux:table>
-                        <flux:table.columns>
-                            <flux:table.column>Nama</flux:table.column>
-                            <flux:table.column>Harga</flux:table.column>
-                            <flux:table.column>Margin %</flux:table.column>
-                            <flux:table.column></flux:table.column>
-                        </flux:table.columns>
-                        <flux:table.rows>
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-kb-text-primary">Jenis Bisnis</label>
+                    <select wire:model="business_type"
+                        class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        <option value="F&B">F&B (Makanan & Minuman)</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Retail">Retail</option>
+                        <option value="Service">Service / Jasa</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-sm font-medium text-kb-text-primary">Target Customer</label>
+                <input type="text" wire:model="target_customer" placeholder="Contoh: Mahasiswa 18-24 tahun"
+                    class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-sm font-medium text-kb-text-primary">Deskripsi Bisnis</label>
+                <textarea wire:model="business_description" rows="3" placeholder="Ceritakan singkat tentang bisnis Anda..."
+                    class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors resize-y"></textarea>
+            </div>
+        </div>
+
+        {{-- Produk --}}
+        <div class="p-6 space-y-4 rounded-2xl border border-kb-border bg-kb-surface-1 shadow-sm">
+            <div class="flex items-center justify-between">
+                <h2 class="font-display text-lg font-semibold text-kb-text-primary">Produk Utama</h2>
+                <button type="button" wire:click="$set('showAddProductModal', true)"
+                    class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200">
+                    + Tambah Produk
+                </button>
+            </div>
+
+            @if (count($products) > 0)
+                <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                    <table class="w-full text-left text-sm">
+                        <thead
+                            class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3">Nama</th>
+                                <th class="px-4 py-3">Harga</th>
+                                <th class="px-4 py-3">Margin %</th>
+                                <th class="px-4 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
                             @foreach ($products as $index => $product)
-                                <flux:table.row>
-                                    <flux:table.cell>{{ $product['name'] }}</flux:table.cell>
-                                    <flux:table.cell>Rp{{ number_format($product['price'], 0, ',', '.') }}</flux:table.cell>
-                                    <flux:table.cell>{{ $product['margin'] }}%</flux:table.cell>
-                                    <flux:table.cell>
-                                        <flux:button type="button" variant="subtle" size="xs" wire:click="removeProduct({{ $index }})" color="red">
+                                <tr class="hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-4 py-3 font-medium text-gray-900">{{ $product['name'] }}</td>
+                                    <td class="px-4 py-3 text-gray-600">
+                                        Rp{{ number_format($product['price'], 0, ',', '.') }}</td>
+                                    <td class="px-4 py-3 text-gray-600">{{ $product['margin'] }}%</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <button type="button" wire:click="removeProduct({{ $index }})"
+                                            class="px-2.5 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors">
                                             Hapus
-                                        </flux:button>
-                                    </flux:table.cell>
-                                </flux:table.row>
+                                        </button>
+                                    </td>
+                                </tr>
                             @endforeach
-                        </flux:table.rows>
-                    </flux:table>
-                @else
-                    <flux:text class="text-kb-text-muted text-sm">Belum ada produk. Tambahkan produk utama Anda.</flux:text>
-                @endif
-            </flux:card>
-
-            {{-- Sales Channels --}}
-            <flux:card class="p-6 space-y-4 rounded-2xl border-kb-border bg-kb-surface-1">
-                <h1 class="font-display text-lg font-semibold text-kb-text-primary">Saluran Penjualan</h1>
-                <flux:checkbox.group wire:model="sales_channels">
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                        @foreach (['Store', 'Instagram', 'Tokopedia', 'Shopee', 'WhatsApp'] as $channel)
-                            <flux:checkbox value="{{ $channel }}" label="{{ $channel }}" />
-                        @endforeach
-                    </div>
-                </flux:checkbox.group>
-            </flux:card>
-
-            {{-- Constraints --}}
-            <flux:card class="p-6 space-y-4 rounded-2xl border-kb-border bg-kb-surface-1">
-                <h1 class="font-display text-lg font-semibold text-kb-text-primary">Kendala & Anggaran</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <flux:field>
-                        <flux:label>Budget Marketing / bulan (Rp)</flux:label>
-                        <flux:input type="number" wire:model="marketing_budget" />
-                    </flux:field>
-                    <flux:field>
-                        <flux:label>Kapasitas Tim (orang)</flux:label>
-                        <flux:input type="number" wire:model="team_capacity" />
-                    </flux:field>
+                        </tbody>
+                    </table>
                 </div>
-                <p class="text-sm text-kb-text-muted font-medium">Kendala membantu AI memberikan rekomendasi yang realistis sesuai kemampuan Anda.</p>
-            </flux:card>
+            @else
+                <p class="text-kb-text-muted text-sm">Belum ada produk. Tambahkan produk utama Anda.</p>
+            @endif
+        </div>
 
-            <div class="flex justify-end">
-                <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl">Simpan</flux:button>
+        {{-- Sales Channels --}}
+        <div class="p-6 space-y-4 rounded-2xl border border-kb-border bg-kb-surface-1 shadow-sm">
+            <h2 class="font-display text-lg font-semibold text-kb-text-primary">Saluran Penjualan</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                @foreach (['Store', 'Instagram', 'Tokopedia', 'Shopee', 'WhatsApp'] as $channel)
+                    <label
+                        class="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50/30 cursor-pointer transition-all select-none">
+                        <input type="checkbox" value="{{ $channel }}" wire:model="sales_channels"
+                            class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                        <span class="text-sm font-medium text-gray-800">{{ $channel }}</span>
+                    </label>
+                @endforeach
             </div>
-        </form>
+        </div>
 
-        {{-- Add Product Modal --}}
-        <flux:modal wire:model="showAddProductModal">
-            <h1 class="font-display">Tambah Produk</h1>
-            <div class="mt-4 space-y-4">
-                <flux:field>
-                    <flux:label>Nama Produk</flux:label>
-                    <flux:input wire:model="new_product_name" />
-                </flux:field>
+        {{-- Constraints --}}
+        <div class="p-6 space-y-4 rounded-2xl border border-kb-border bg-kb-surface-1 shadow-sm">
+            <h2 class="font-display text-lg font-semibold text-kb-text-primary">Anggaran</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-kb-text-primary">Budget Marketing / bulan (Rp)</label>
+                    <input type="number" wire:model="marketing_budget"
+                        class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-kb-text-primary">Kapasitas Tim (orang)</label>
+                    <input type="number" wire:model="team_capacity"
+                        class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button type="submit"
+                class="btn-gradient-primary rounded-xl px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity">
+                Simpan
+            </button>
+        </div>
+    </form>
+
+    {{-- Add Product Modal --}}
+    <div x-show="showAddProductModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;">
+        <div @click.away="showAddProductModal = false"
+            class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-6 space-y-4"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+            <h3 class="font-display text-lg font-bold text-gray-900">Tambah Produk</h3>
+
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
+                    <input type="text" wire:model="new_product_name"
+                        class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
-                    <flux:field>
-                        <flux:label>Harga (Rp)</flux:label>
-                        <flux:input type="number" wire:model="new_product_price" />
-                    </flux:field>
-                    <flux:field>
-                        <flux:label>Margin (%)</flux:label>
-                        <flux:input type="number" wire:model="new_product_margin" />
-                    </flux:field>
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-medium text-gray-700">Harga (Rp)</label>
+                        <input type="number" wire:model="new_product_price"
+                            class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-medium text-gray-700">Margin (%)</label>
+                        <input type="number" wire:model="new_product_margin"
+                            class="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors" />
+                    </div>
                 </div>
-                <div class="flex justify-end gap-2">
-                    <flux:button variant="subtle" wire:click="$set('showAddProductModal', false)">Batal</flux:button>
-                    <flux:button variant="primary" wire:click="addProduct" class="btn-gradient-primary">Tambah</flux:button>
+
+                <div class="flex justify-end gap-2.5 pt-2">
+                    <button type="button" wire:click="$set('showAddProductModal', false)"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="button" wire:click="addProduct"
+                        class="btn-gradient-primary px-4 py-2 text-sm font-semibold text-white rounded-xl shadow-sm hover:opacity-90 transition-opacity">
+                        Tambah
+                    </button>
                 </div>
             </div>
-        </flux:modal>
+        </div>
     </div>
+</div>

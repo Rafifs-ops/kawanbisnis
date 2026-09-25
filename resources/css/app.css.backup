@@ -15,54 +15,60 @@
     --font-display: 'Space Grotesk', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
-    /* Brand palette — 4 core colors only */
-    --color-kb-blue-electric: #081e8e;
-    --color-kb-blue-light: #6fc6fa;
+    /* Brand palette with new White Ghost (#f5f8fc) */
+    --color-kb-blue-electric: #081E8E;
+    --color-kb-blue-light: #6FC6FA;
     --color-kb-white-ghost: #f5f8fc;
-    --color-kb-black-blue: #0a1116;
+    --color-kb-black-blue: #0A1116;
 
-    /* Surface elevation — light mode: White Ghost background, white cards */
+    /* Surface elevation — new palette: White Ghost cards on Black Blue bg */
     --color-kb-surface-0: transparent;
-    --color-kb-surface-1: #ffffff;
-    --color-kb-surface-2: #f5f8fc;
-    --color-kb-surface-3: #e4e7ec;
-    --color-kb-surface-solid: #ffffff;
-    --color-kb-border: #e4e7ec;
-    --color-kb-border-subtle: #edf1f5;
+    --color-kb-surface-1: var(--color-kb-white-ghost);
+    --color-kb-surface-2: #eaeff5;
+    --color-kb-surface-3: #d9e2ed;
+    --color-kb-surface-solid: var(--color-kb-white-ghost);
+    --color-kb-border: #d1dce9;
+    --color-kb-border-subtle: #e5ecf5;
 
-    /* Text on light backgrounds */
+    /* Text on White Ghost backgrounds */
     --color-kb-text-primary: #0a1116;
-    --color-kb-text-secondary: #3f3f46;
-    --color-kb-text-muted: #71717a;
-    --color-kb-text-faint: #a1a1aa;
+    --color-kb-text-secondary: #2d3748;
+    --color-kb-text-muted: #5a6b85;
+    --color-kb-text-faint: #8a9ab0;
 
     /* Shade helpers for gradients / hover / opacity */
-    --color-kb-blue-electric-5: oklch(from #081e8e l c h / 0.05);
-    --color-kb-blue-electric-10: oklch(from #081e8e l c h / 0.10);
-    --color-kb-blue-electric-20: oklch(from #081e8e l c h / 0.20);
-    --color-kb-blue-electric-40: oklch(from #081e8e l c h / 0.40);
-    --color-kb-blue-light-10: oklch(from #6fc6fa l c h / 0.10);
-    --color-kb-blue-light-15: oklch(from #6fc6fa l c h / 0.15);
-    --color-kb-blue-light-20: oklch(from #6fc6fa l c h / 0.20);
-    --color-kb-blue-light-30: oklch(from #6fc6fa l c h / 0.30);
-    --color-kb-blue-light-50: oklch(from #6fc6fa l c h / 0.50);
-    --color-kb-blue-light-80: oklch(from #6fc6fa l c h / 0.80);
+    --color-kb-blue-electric-5: oklch(from #081E8E l c h / 0.05);
+    --color-kb-blue-electric-10: oklch(from #081E8E l c h / 0.10);
+    --color-kb-blue-electric-20: oklch(from #081E8E l c h / 0.20);
+    --color-kb-blue-electric-40: oklch(from #081E8E l c h / 0.40);
+    --color-kb-blue-light-10: oklch(from #6FC6FA l c h / 0.10);
+    --color-kb-blue-light-15: oklch(from #6FC6FA l c h / 0.15);
+    --color-kb-blue-light-20: oklch(from #6FC6FA l c h / 0.20);
+    --color-kb-blue-light-30: oklch(from #6FC6FA l c h / 0.30);
+    --color-kb-blue-light-50: oklch(from #6FC6FA l c h / 0.50);
+    --color-kb-blue-light-80: oklch(from #6FC6FA l c h / 0.80);
+    /* White Ghost shades */
+    --color-kb-white-ghost-5: oklch(from #f5f8fc l c h / 0.05);
+    --color-kb-white-ghost-10: oklch(from #f5f8fc l c h / 0.10);
+    --color-kb-white-ghost-20: oklch(from #f5f8fc l c h / 0.20);
 
     /* Flux UI accent overrides — blue accent, white text */
-    --color-accent: #081e8e;
+    --color-accent: var(--color-kb-blue-electric);
     --color-accent-content: #ffffff;
     --color-accent-foreground: #ffffff;
 
     /* Gradients — brand blue (buttons / small accents only) */
-    --gradient-kb-primary: linear-gradient(135deg, #081e8e 0%, #0f3fb0 100%);
-    --gradient-kb-primary-reverse: linear-gradient(135deg, #0f3fb0 0%, #081e8e 100%);
+    --gradient-kb-primary: linear-gradient(135deg, var(--color-kb-blue-electric) 0%, #0F3FB0 100%);
+    --gradient-kb-primary-reverse: linear-gradient(135deg, #0F3FB0 0%, var(--color-kb-blue-electric) 100%);
 
-    /* Landing/guest: brand light blue */
-    --gradient-kb-hero: #6fc6fa;
+    /* Hero gradient using new palette */
+    --gradient-kb-hero: linear-gradient(135deg, var(--color-kb-blue-light), var(--color-kb-white-ghost));
 
-    /* Dashboard/app: White Ghost */
-    --gradient-kb-app: #f5f8fc;
-    --gradient-kb-auth: #f5f8fc;
+    /* Dashboard gradient using Black Blue background with White Ghost cards */
+    --gradient-kb-app: linear-gradient(180deg, var(--color-kb-black-blue) 0%, var(--color-kb-white-ghost) 100%);
+
+    /* Auth gradient */
+    --gradient-kb-auth: linear-gradient(135deg, var(--color-kb-blue-light), var(--color-kb-white-ghost));
 }
 
 /* ─── Base ────────────────────────────────────────────── */
@@ -82,14 +88,76 @@
     body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        background-color: var(--color-kb-white-ghost);
+        background-color: var(--color-kb-black-blue);
+        color: var(--color-kb-text-primary);
     }
 
-    /* Tabular numbers for KPI / data displays */
-    .tabular-nums {
-        font-variant-numeric: tabular-nums;
+    /* Dashboard layout with new color palette */
+    [data-flux-sidebar] {
+        background-color: var(--color-kb-blue-electric);
+        color: #ffffff;
     }
-}
+
+    [data-flux-sidebar] [data-flux-sidebar-item] {
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+    }
+
+    [data-flux-sidebar] [data-flux-sidebar-item]:hover {
+        background-color: var(--color-kb-blue-light);
+        color: var(--color-kb-black-blue);
+    }
+
+    [data-flux-sidebar] [data-flux-sidebar-item][data-current] {
+        background-color: var(--color-kb-blue-light);
+        color: var(--color-kb-black-blue);
+        font-weight: 600;
+    }
+
+    /* Dashboard content area */
+    .dashboard-content {
+        background-color: var(--color-kb-white-ghost);
+        min-height: 100vh;
+    }
+
+    /* Loading states */
+    .loading-overlay {
+        position: relative;
+        pointer-events: none;
+    }
+
+    .loading-overlay::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(245, 248, 252, 0.8);
+        backdrop-filter: blur(2px);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--color-kb-blue-light);
+        border-top-color: var(--color-kb-blue-electric);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Form input focus states */
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--color-kb-blue-light);
+        box-shadow: 0 0 0 3px var(--color-kb-blue-light-10);
+    }
 
 /* ─── Flux UI Field Overrides ─────────────────────────── */
 [data-flux-field]:not(ui-radio, ui-checkbox) {
@@ -112,11 +180,16 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-kb-blue-light ring-offset-2 ring-offset-kb-surface-solid;
 }
 
-/* ─── Global CSS Custom Properties ───────────────────── */
+/* Global CSS Custom Properties ───────────────────── */
 :root {
-    --color-primary: #081e8e;
-    --color-secondary: #6fc6fa;
-    --color-base: #f5f8fc;
+    --color-primary: var(--color-kb-blue-electric);
+    --color-secondary: var(--color-kb-blue-light);
+    --color-base: var(--color-kb-black-blue);
+    --color-surface: var(--color-kb-white-ghost);
+    --color-surface-solid: var(--color-kb-white-ghost);
+    --color-border: var(--color-kb-border);
+    --color-text-primary: var(--color-kb-text-primary);
+    --color-text-muted: var(--color-kb-text-muted);
 }
 
 /* ─── Gradient Utility Classes ───────────────────────── */
@@ -129,7 +202,7 @@ select:focus[data-flux-control] {
 }
 
 .bg-gradient-brand-vertical {
-    background: linear-gradient(180deg, #0a1116 0%, #081e8e 100%);
+    background: linear-gradient(180deg, #0A1116 0%, #081E8E 100%);
 }
 
 .bg-gradient-brand-reverse {
@@ -141,14 +214,14 @@ select:focus[data-flux-control] {
 }
 
 .btn-gradient-primary {
-    background: var(--color-kb-blue-electric);
+    background: #081E8E;
     color: #ffffff;
     transition: box-shadow 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-gradient-primary:hover {
     background: #0a2ab5;
-    box-shadow: 0 4px 16px -2px oklch(from #081e8e l c h / 0.35);
+    box-shadow: 0 4px 16px -2px oklch(from #081E8E l c h / 0.35);
     transform: scale(1.02);
 }
 
@@ -472,12 +545,11 @@ select:focus[data-flux-control] {
     animation: progress-fill 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ─── Flux UI Sidebar Active State ─────────────────────── */
 [data-flux-sidebar-item][data-current] {
     background: var(--color-kb-blue-electric) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
-    box-shadow: 0 4px 16px -2px oklch(from #081e8e l c h / 0.25);
+    box-shadow: 0 4px 16px -2px rgba(8, 30, 142, 0.25);
     border-color: transparent !important;
 }
 
@@ -487,7 +559,7 @@ select:focus[data-flux-control] {
 
 [data-flux-sidebar-item][data-current]:hover {
     background: #0a2ab5 !important;
-    box-shadow: 0 4px 20px -2px oklch(from #081e8e l c h / 0.3);
+    box-shadow: 0 4px 20px -2px rgba(8, 30, 142, 0.3);
 }
 
 [data-flux-sidebar-item][data-current] [data-content] {
@@ -527,7 +599,7 @@ select:focus[data-flux-control] {
 
     .timeline-node-running {
         animation: none;
-        box-shadow: 0 0 0 4px oklch(from #081e8e l c h / 0.3);
+        box-shadow: 0 0 0 4px oklch(from var(--color-kb-blue-light) l c h / 0.3);
     }
 
     .live-dot {
@@ -547,32 +619,4 @@ select:focus[data-flux-control] {
     html {
         scroll-behavior: auto;
     }
-}
-
-.sidebar-main [data-flux-sidebar-item][data-current] {
-    background: #061a70 !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 16px -2px oklch(from #081e8e l c h / 0.25);
-    border-color: transparent !important;
-}
-.sidebar-main [data-flux-sidebar-item][data-current] svg {
-    color: #ffffff !important;
-}
-.sidebar-main [data-flux-sidebar-item][data-current]:hover {
-    background: #072080 !important;
-    box-shadow: 0 4px 20px -2px oklch(from #081e8e l c h / 0.3);
-}
-.sidebar-main [data-flux-sidebar-item][data-current] [data-content] {
-    color: #ffffff !important;
-    font-weight: 600 !important;
-}
-
-/* Ensure sidebar item text and icons are white */
-.sidebar-main .flux-sidebar-item,
-.sidebar-main .flux-sidebar-item * {
-    color: #ffffff;
-}
-.sidebar-main .flux-sidebar-item svg {
-    fill: #ffffff;
 }

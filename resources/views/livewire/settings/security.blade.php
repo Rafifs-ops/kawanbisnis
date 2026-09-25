@@ -155,7 +155,7 @@
                         <div class="flex justify-center">
                             <div class="relative w-64 overflow-hidden border rounded-lg border-kb-blue-light/20 aspect-square">
                                 @empty($qrCodeSvg)
-                                    <div class="absolute inset-0 flex items-center justify-center bg-zinc-100 animate-pulse">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-kb-surface-2 animate-pulse">
                                         <flux:icon.loading/>
                                     </div>
                                 @else
@@ -181,7 +181,7 @@
 
                         <div class="space-y-4">
                             <div class="relative flex items-center justify-center w-full">
-                                <div class="absolute inset-0 w-full h-px top-1/2 bg-kb-blue-light/20"></div>
+                                <div class="absolute inset-0 w-full h-px top-1/2 bg-kb-border-subtle"></div>
                                 <span class="relative px-2 text-sm bg-white text-kb-text-muted">
                                     {{ __('or, enter the code manually') }}
                                 </span>
@@ -202,9 +202,9 @@
                                     }
                                 }"
                             >
-                                <div class="flex items-stretch w-full border rounded-xl border-kb-blue-light/20">
+                                <div class="flex items-stretch w-full border rounded-xl border-kb-border">
                                     @empty($manualSetupKey)
-                                        <div class="flex items-center justify-center w-full p-3 bg-kb-blue-electric/10">
+                                        <div class="flex items-center justify-center w-full p-3 bg-kb-blue-electric-5">
                                             <flux:icon.loading variant="mini"/>
                                         </div>
                                     @else
@@ -212,18 +212,18 @@
                                             type="text"
                                             readonly
                                             value="{{ $manualSetupKey }}"
-                                            class="w-full p-3 bg-transparent outline-none text-kb-white-ghost"
+                                            class="w-full p-3 bg-transparent outline-none text-kb-text-primary"
                                         />
 
                                         <button
                                             @click="copy()"
-                                            class="px-3 transition-colors border-l cursor-pointer border-kb-blue-light/20"
+                                            class="px-3 transition-colors border-l cursor-pointer border-kb-border"
                                         >
                                             <flux:icon.document-duplicate x-show="!copied" variant="outline"></flux:icon>
                                             <flux:icon.check
                                                 x-show="copied"
                                                 variant="solid"
-                                                class="text-green-500"
+                                                class="text-emerald-600"
                                             ></flux:icon>
                                         </button>
                                     @endempty
@@ -237,25 +237,25 @@
 
         @if ($canManagePasskeys)
             <section class="mt-12">
-                <flux:heading>{{ __('Passkeys') }}</flux:heading>
-                <flux:subheading>{{ __('Manage your passkeys for passwordless sign-in') }}</flux:subheading>
+                <flux:heading class="text-xl font-semibold text-kb-text-primary">{{ __('Passkeys') }}</flux:heading>
+                <flux:subheading class="text-kb-text-muted">{{ __('Manage your passkeys for passwordless sign-in') }}</flux:subheading>
 
                 <div class="mt-6 flex flex-col w-full mx-auto space-y-6 text-sm" wire:cloak>
-                    <div class="border rounded-lg border-kb-blue-light/10 overflow-hidden">
+                    <div class="border rounded-lg border-kb-border overflow-hidden">
                         @forelse ($passkeys as $passkey)
-                            <div class="flex items-center justify-between p-4 {{ ! $loop->last ? 'border-b border-kb-blue-light/10' : '' }}">
+                            <div class="flex items-center justify-between p-4 {{ ! $loop->last ? 'border-b border-kb-border' : '' }}">
                                 <div class="flex items-center gap-4">
-                                    <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-kb-blue-electric/10">
+                                    <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-kb-blue-electric-5">
                                         <flux:icon.key class="size-5 text-kb-blue-electric" />
                                     </div>
                                     <div class="space-y-1">
                                         <div class="flex items-center gap-2.5">
-                                            <p class="font-medium tracking-tight text-kb-white-ghost">{{ $passkey['name'] }}</p>
+                                            <p class="font-medium tracking-tight text-kb-text-primary">{{ $passkey['name'] }}</p>
                                             @if ($passkey['authenticator'])
                                                 <flux:badge size="sm">{{ $passkey['authenticator'] }}</flux:badge>
                                             @endif
                                         </div>
-                                        <p class="text-kb-white-ghost/50 text-xs">
+                                        <p class="text-kb-text-muted text-xs">
                                             {{ __('Added :time', ['time' => $passkey['created_at_diff']]) }}
                                             @if ($passkey['last_used_at_diff'])
                                                 <span class="opacity-50 mx-1">/</span>
@@ -271,16 +271,16 @@
                                     icon="trash"
                                     icon:variant="outline"
                                     wire:click="confirmDelete({{ $passkey['id'] }})"
-                                    class="text-red-400 hover:text-red-500 hover:bg-red-500/10"
+                                    class="text-red-600 hover:text-red-700 hover:bg-red-50"
                                 />
                             </div>
                         @empty
                             <div class="p-8 text-center">
-                                <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-kb-blue-electric/10">
-                                    <flux:icon.key class="size-7 text-kb-blue-electric/50" />
+                                <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-kb-blue-electric-5">
+                                    <flux:icon.key class="size-7 text-kb-blue-electric" />
                                 </div>
-                                <p class="font-medium text-kb-white-ghost">{{ __('No passkeys yet') }}</p>
-                                <flux:text class="mt-1 text-kb-white-ghost/60">{{ __('Add a passkey to sign in without a password') }}</flux:text>
+                                <p class="font-medium text-kb-text-primary">{{ __('No passkeys yet') }}</p>
+                                <flux:text class="mt-1 text-kb-text-muted">{{ __('Add a passkey to sign in without a password') }}</flux:text>
                             </div>
                         @endforelse
                     </div>
@@ -299,8 +299,8 @@
     >
         <div class="space-y-6">
             <div class="space-y-2">
-                <flux:heading size="lg">{{ __('Remove passkey') }}</flux:heading>
-                <flux:text>
+                <flux:heading size="lg" class="text-kb-text-primary">{{ __('Remove passkey') }}</flux:heading>
+                <flux:text class="text-kb-text-secondary">
                     {{ __('Are you sure you want to remove the passkey ":name"? You will no longer be able to use it to sign in.', ['name' => $deletingPasskeyName]) }}
                 </flux:text>
             </div>
