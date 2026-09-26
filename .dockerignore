@@ -6,6 +6,11 @@
 node_modules
 vendor
 public/build
+public/storage
+public/css/filament
+public/js/filament
+public/fonts/filament
+bootstrap/cache
 storage/*.key
 storage/framework/cache/*
 storage/framework/sessions/*
@@ -13,7 +18,14 @@ storage/framework/views/*
 storage/logs/*
 database/database.sqlite
 tests
+stubs
+.ai
 .agents
 .claude
 .cursor
 .junie
+kawan-bisnis
+kawan-bisnis-shm
+kawan-bisnis-wal
+Dockerfile
+.dockerignore
