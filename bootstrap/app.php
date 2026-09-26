@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Behind a reverse proxy (Render, Fly, etc.) TLS terminates at the
+        // proxy. Trust its X-Forwarded-* headers so asset/redirect URLs are
+        // generated as https instead of http (otherwise CSS/JS are blocked as
+        // mixed content).
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
