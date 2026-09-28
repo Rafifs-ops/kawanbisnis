@@ -1,7 +1,7 @@
 <div class="flex h-full w-full flex-1 flex-col gap-6">
     {{-- Header with Tujuan Bisnis on the top, beside the title --}}
     <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
             <div>
                 <h1 class="font-display text-2xl font-bold text-kb-text-primary">Dashboard</h1>
                 @if ($passport)

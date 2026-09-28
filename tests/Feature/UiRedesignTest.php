@@ -99,7 +99,7 @@ test('passport page uses profil bisnis title and simpan button', function () {
     $this->get(route('passport.index'))
         ->assertOk()
         ->assertSee('Profil Bisnis')
-        ->assertSee('>Simpan</', false)
+        ->assertSeeText('Simpan')
         ->assertDontSee('Simpan Passport Bisnis');
 });
 

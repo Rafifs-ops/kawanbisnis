@@ -1,5 +1,5 @@
 <div class="flex h-full w-full flex-1 flex-col gap-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <flux:heading level="1" class="font-display text-2xl font-bold text-kb-text-primary">Tandai Selesai</flux:heading>
             <flux:text class="text-kb-text-muted">

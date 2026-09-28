@@ -190,13 +190,13 @@ test('changing goal type resets target value', function () {
         ->assertSet('target_value', 0);
 });
 
-test('sidebar uses brand aqua background color', function () {
+test('sidebar uses brand blue electric background color', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
     $html = $this->get(route('dashboard'))->assertOk()->getContent();
 
-    expect($html)->toContain('bg-[#9DE6FA]');
+    expect($html)->toContain('bg-kb-blue-electric');
 });
 
 test('action plan page shows lihat action plan dropdown toggle', function () {

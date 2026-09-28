@@ -31,14 +31,14 @@
                         @foreach ($group['plans'] as $plan)
                             <div class="rounded-2xl border border-kb-border bg-kb-surface-1 shadow-sm overflow-hidden">
                                 {{-- Plan Header --}}
-                                <div class="p-6 pb-4">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="flex items-start gap-4">
+                                <div class="p-4 pb-4 sm:p-6 sm:pb-4">
+                                    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                        <div class="flex items-start gap-4 min-w-0">
                                             <div
                                                 class="w-10 h-10 rounded-full bg-gradient-to-br from-kb-blue-electric to-kb-blue-light text-white flex items-center justify-center text-lg font-bold shrink-0">
                                                 {{ $plan->priority_rank }}
                                             </div>
-                                            <div>
+                                            <div class="min-w-0">
                                                 <h3 class="font-display text-lg font-semibold text-kb-text-primary">
                                                     {{ $plan->title }}</h3>
                                                 <p class="text-sm text-kb-text-secondary mt-1">{{ $plan->description }}
@@ -58,7 +58,8 @@
                                             </div>
                                         </div>
 
-                                        <a href="{{ route('check-in.create', $plan->id) }}" class="shrink-0">
+                                        <a href="{{ route('check-in.create', $plan->id) }}"
+                                            class="shrink-0 self-start sm:self-auto">
                                             <button type="button"
                                                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-kb-border bg-white text-xs font-medium text-kb-text-primary shadow-sm hover:bg-gray-50 transition-colors">
                                                 <svg class="w-4 h-4 text-emerald-500" fill="none"
@@ -75,7 +76,7 @@
 
                                 {{-- Steps Timeline --}}
                                 @if ($plan->steps && count($plan->steps) > 0)
-                                    <div class="px-6 pb-6" x-data="{ open: false }">
+                                    <div class="px-4 pb-6 sm:px-6" x-data="{ open: false }">
                                         <div class="border-t border-kb-border-subtle pt-4">
                                             <button type="button"
                                                 class="flex w-full items-center justify-between gap-2 text-left group"

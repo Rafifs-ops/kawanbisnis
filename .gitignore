@@ -28,3 +28,6 @@ yarn-error.log
 .agents
 .ai
 .github
+
+# Local libsql/Turso database artifacts
+kawan-bisnis*
