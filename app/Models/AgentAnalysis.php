@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $growth_diagnosis_id
  * @property string $agent_type
  * @property string $question_answered
- * @property array{summary?: string, anomalies?: list<string>, key_findings?: list<string>, channel_performance?: list<string>, segments?: list<string>, insights?: list<string>, opportunities?: list<string>}|null $findings
+ * @property array{summary?: string, anomalies?: list<string>, key_findings?: list<string>, channel_performance?: list<string>, segments?: list<string>, insights?: list<string>, opportunities?: list<string>, root_causes?: list<string>, analysis_basis?: list<array{framework: string, insight: string, reference: string}>, kpi_metrics?: list<array{metric: string, target: string, unit: string}>}|null $findings
  * @property list<string>|null $hypotheses
  * @property float $confidence_score
  * @property-read GrowthDiagnosis $growthDiagnosis

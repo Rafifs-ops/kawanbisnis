@@ -125,7 +125,7 @@
                 <a href="{{ route('action-plan.index') }}">
                     <flux:button variant="subtle">Batal</flux:button>
                 </a>
-                <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl">
+                <flux:button type="submit" variant="primary" class="btn-gradient-primary rounded-xl" wire:loading.attr="disabled" wire:target="submit">
                     Simpan
                 </flux:button>
             </div>

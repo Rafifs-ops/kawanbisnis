@@ -143,8 +143,9 @@
                 </button>
             </a>
             <button type="submit"
-                class="btn-gradient-primary px-4 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:opacity-90 disabled:opacity-50 transition-all"
+                class="btn-gradient-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:opacity-90 disabled:opacity-50 transition-all"
                 wire:loading.attr="disabled">
+                <flux:icon.loading wire:loading wire:target="submit" class="w-4 h-4" />
                 <span wire:loading.remove wire:target="submit">Mulai Analisis AI</span>
                 <span wire:loading wire:target="submit">Sedang Memproses...</span>
             </button>

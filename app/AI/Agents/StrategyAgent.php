@@ -35,11 +35,19 @@ Tugasmu adalah mensintesis temuan dari agen Analytics, Customer, dan Marketing, 
 
 Hari ini adalah {$today}. Gunakan tanggal ini sebagai referensi untuk menjadwalkan langkah-langkah action plan.
 
-Kamu harus menghasilkan output dengan 6 bagian:
-1. business_diagnosis: Identifikasi masalah utama bisnis secara singkat dan jelas.
-2. root_causes: Daftar alasan mengapa masalah tersebut bisa terjadi (2-4 item).
-3. growth_opportunity: Peluang terbesar yang bisa dimanfaatkan untuk pertumbuhan (2-4 item).
-4. recommendations: Top 3 rekomendasi solusi yang paling prioritas. Setiap rekomendasi HARUS memiliki:
+WAJIB panggil tool similarity_search untuk mengambil teori, framework, benchmark, dan knowledge base sebelum menyusun analisis.
+
+Kamu harus menghasilkan output dengan 8 bagian:
+1. analysis_basis: Dasar analisis berupa teori/framework/benchmark YANG KAMU PAKAI untuk menilai bisnis ini (bukan sekadar mengulang data snapshot). Setiap item berisi:
+   - framework: nama teori/framework/metode (contoh: "RFM Analysis", "Unit Economics", "4P Marketing Mix", "AIDA", "CLV vs CAC").
+   - insight: bagaimana teori ini diterapkan untuk menafsirkan kondisi bisnis ini.
+   - reference: sumber/rujukan singkat (buku, praktik industri, atau knowledge base).
+   Minimal 2, maksimal 4 item. JANGAN hanya menampilkan angka snapshot.
+2. business_diagnosis: Identifikasi masalah utama bisnis secara singkat dan jelas.
+3. key_findings: Daftar TEMUAN MASALAH / fakta dari data dan analisis (2-4 item). WAJIB berupa masalah, anomali, atau kejanggalan yang ditemukan — BUKAN solusi/rekomendasi. Solusi hanya boleh muncul di recommendations.
+4. root_causes: Daftar DUGAAN PENYEBAB / hipotesis mengapa masalah tersebut terjadi (2-4 item). Nyatakan sebagai dugaan, bukan fakta.
+5. growth_opportunity: Peluang terbesar yang bisa dimanfaatkan untuk pertumbuhan (2-4 item).
+6. recommendations: Top 3 rekomendasi solusi yang paling prioritas. Setiap rekomendasi HARUS memiliki:
    - title: Judul rekomendasi
    - description: Penjelasan singkat rekomendasi
    - priority_score: Skor prioritas (1-10)
@@ -48,8 +56,8 @@ Kamu harus menghasilkan output dengan 6 bagian:
      * title: Judul langkah
      * description: Penjelasan detail apa yang harus dilakukan
    Minimal 3 langkah per rekomendasi, maksimal 7 langkah. Buat langkah yang spesifik dan actionable.
-5. action_plan: Rencana aksi dalam 2 timeline: short_term (<=7 hari) dan long_term (>7 hari). Berisi array of strings ringkas.
-6. kpi_metrics: Daftar metrik yang harus dipantau untuk mengukur keberhasilan aksi, masing-masing dengan nama metrik, target, dan unit.
+7. action_plan: Rencana aksi dalam 2 timeline: short_term (<=7 hari) dan long_term (>7 hari). Berisi array of strings ringkas.
+8. kpi_metrics: Daftar metrik yang harus dipantau untuk mengukur keberhasilan aksi, masing-masing dengan nama metrik, target, dan unit.
 
 Contoh steps yang baik:
 - day_offset: 0, title: "Riset kompetitor", description: "Buka Instagram, cari 5 kompetitor sejenis, catat harga dan promosi mereka"
@@ -57,8 +65,10 @@ Contoh steps yang baik:
 - day_offset: 3, title: "Posting dan boost", description: "Upload konten ke Instagram, budget Rp50.000 untuk boost 3 hari"
 
 Gunakan Prioritization Framework: Score = Expected Impact x Feasibility x Confidence.
-Gunakan tool similarity_search untuk mencari knowledge base sebelum membuat rencana.
-Jawab dalam Bahasa Indonesia.
+
+ATURAN BAHASA (WAJIB):
+- Seluruh isi output — semua nilai string pada JSON (termasuk analysis_basis, key_findings, root_causes, growth_opportunity, judul/deskripsi recommendations, steps, action_plan, dan kpi_metrics) — WAJIB ditulis dalam Bahasa Indonesia yang baik, baku, dan mudah dimengerti pemilik UMKM.
+- Dilarang menulis kalimat dalam bahasa Inggris. Istilah teknis/umum (mis. ROAS, AOV, KPI, framework) boleh dipertahankan.
 TEXT;
     }
 
@@ -74,7 +84,15 @@ TEXT;
     public function schema(JsonSchema $schema): array
     {
         return [
+            'analysis_basis' => $schema->array()->items(
+                $schema->object(fn (JsonSchema $schema) => [
+                    'framework' => $schema->string()->required(),
+                    'insight' => $schema->string()->required(),
+                    'reference' => $schema->string()->required(),
+                ])->required()
+            )->required(),
             'business_diagnosis' => $schema->string()->required(),
+            'key_findings' => $schema->array()->items($schema->string())->required(),
             'root_causes' => $schema->array()->items($schema->string())->required(),
             'growth_opportunity' => $schema->array()->items($schema->string())->required(),
             'recommendations' => $schema->array()->items(
@@ -108,7 +126,7 @@ TEXT;
     public function buildPrompt(): string
     {
         return sprintf(
-            'Multi-Agent Findings: %s. Business Constraints: %s',
+            'Multi-Agent Findings: %s. Business Constraints: %s. Jawab seluruh nilai string dalam Bahasa Indonesia.',
             json_encode($this->multiAgentFindings),
             json_encode($this->constraints)
         );

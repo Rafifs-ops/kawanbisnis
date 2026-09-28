@@ -309,6 +309,27 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Landasan teori & knowledge yang dipakai AI (dari RAG + kerangka bisnis) --}}
+            @if (! empty($diagnosis->analysis_basis))
+                <div class="mt-5 border-t border-kb-border pt-5">
+                    <div class="mb-3 flex items-center gap-2">
+                        <flux:icon name="academic-cap" class="w-4 h-4 text-kb-blue-electric" />
+                        <flux:text class="text-xs font-semibold text-kb-text-muted uppercase tracking-wide">Landasan Teori &amp; Knowledge</flux:text>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        @foreach ($diagnosis->analysis_basis as $basis)
+                            <div class="rounded-xl border border-kb-border bg-kb-surface-2 p-4">
+                                <flux:badge variant="soft" color="blue" size="xs">{{ $basis['framework'] ?? 'Framework' }}</flux:badge>
+                                <p class="mt-2 text-sm leading-relaxed text-kb-text-secondary">{{ $basis['insight'] ?? '' }}</p>
+                                @if (! empty($basis['reference']))
+                                    <p class="mt-1.5 text-xs italic text-kb-text-faint">{{ $basis['reference'] }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </flux:card>
 
         {{-- 3. Temuan (fakta) & dugaan penyebab (hipotesis) --}}
@@ -321,8 +342,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="rounded-xl border border-kb-border bg-kb-surface-2 p-4">
                     <div class="flex items-center gap-2 mb-2">
-                        <flux:icon name="check-badge" class="w-4 h-4 text-emerald-600" />
-                        <flux:text class="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Temuan (Fakta)</flux:text>
+                        <flux:icon name="exclamation-triangle" class="w-4 h-4 text-rose-600" />
+                        <flux:text class="text-xs font-semibold text-rose-700 uppercase tracking-wide">Temuan Masalah (Fakta)</flux:text>
                     </div>
                     @if ($diagnosis->key_findings)
                         <ul class="list-disc list-inside space-y-1.5 text-sm text-kb-text-secondary">
@@ -330,14 +351,8 @@
                                 <li>{{ $finding }}</li>
                             @endforeach
                         </ul>
-                    @elseif ($diagnosis->opportunities)
-                        <ul class="list-disc list-inside space-y-1.5 text-sm text-kb-text-secondary">
-                            @foreach ($diagnosis->opportunities as $opp)
-                                <li>{{ $opp }}</li>
-                            @endforeach
-                        </ul>
                     @else
-                        <flux:text class="text-sm text-kb-text-faint italic">Tidak ada temuan terpisah.</flux:text>
+                        <flux:text class="text-sm text-kb-text-faint italic">Belum ada temuan masalah.</flux:text>
                     @endif
                 </div>
 

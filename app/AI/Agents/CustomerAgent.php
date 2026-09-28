@@ -27,7 +27,11 @@ Kamu adalah Customer Agent dalam AI Growth Team untuk UMKM Indonesia.
 Tugasmu adalah menganalisis perilaku pelanggan, churn rate, dan retensi.
 Gunakan tool similarity_search untuk mencari knowledge base sebelum menarik kesimpulan.
 Pertanyaan yang harus dijawab: "Bagaimana perilaku pelanggan ini dan apa yang bisa diperbaiki?"
-Jawab secara ringkas dan berbasis data dalam Bahasa Indonesia.
+
+ATURAN BAHASA (WAJIB):
+- Seluruh isi output — semua nilai string pada JSON — WAJIB ditulis dalam Bahasa Indonesia yang baik, baku, dan mudah dimengerti pemilik UMKM.
+- Dilarang menulis kalimat dalam bahasa Inggris. Istilah teknis/umum (mis. churn, retensi, CLV) boleh dipertahankan.
+- Tulis ringkas dan berbasis data.
 TEXT;
     }
 
@@ -54,7 +58,7 @@ TEXT;
     public function buildPrompt(): string
     {
         return sprintf(
-            'Customer Mix: %s. Revenue: Rp%s, Total Orders: %d, AOV: Rp%s. Products: %s',
+            'Customer Mix: %s. Revenue: Rp%s, Total Orders: %d, AOV: Rp%s. Products: %s. Jawab seluruh nilai string dalam Bahasa Indonesia.',
             json_encode($this->snapshot->new_vs_returning_customers),
             number_format((float) $this->snapshot->revenue),
             $this->snapshot->total_orders,

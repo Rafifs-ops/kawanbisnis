@@ -49,7 +49,8 @@ test('instructions returns non-empty string with Indonesian context', function (
         ->toContain('growth_opportunity')
         ->toContain('recommendations')
         ->toContain('action_plan')
-        ->toContain('kpi_metrics');
+        ->toContain('kpi_metrics')
+        ->toContain('Bahasa Indonesia');
 });
 
 test('tools returns similarity search tool', function () {

@@ -147,7 +147,7 @@ return [
             'key' => env('OPENROUTER_API_KEY'),
             'models' => [
                 'text' => [
-                    'default' => 'openrouter/free',
+                    'default' => 'dots-studio/dots-3-note-preview:free',
                 ],
                 'embeddings' => [
                     'default' => 'nvidia/nemotron-3-embed-1b:free',

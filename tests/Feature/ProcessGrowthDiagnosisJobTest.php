@@ -122,14 +122,18 @@ it('creates action plans from recommendations', function () {
         ->and($firstPlan->timeline_days)->toBe(7);
 });
 
-it('updates diagnosis with all 6 sections', function () {
+it('updates diagnosis with the strategy sections', function () {
     AnalyticsAgent::fake([['summary' => 'OK', 'anomalies' => [], 'key_findings' => [], 'confidence_score' => 0.8]]);
     CustomerAgent::fake([['summary' => 'OK', 'segments' => [], 'insights' => [], 'hypotheses' => [], 'confidence_score' => 0.8]]);
     MarketingAgent::fake([['summary' => 'OK', 'channel_performance' => [], 'opportunities' => [], 'hypotheses' => [], 'confidence_score' => 0.8]]);
     StrategyAgent::fake([
         [
             'business_diagnosis' => 'Revenue stabil tapi pelanggan menurun',
+            'key_findings' => ['AOV turun 12%', 'Pelanggan lama tidak kembali'],
             'root_causes' => ['Harga terlalu tinggi', 'Layanan pelanggan buruk'],
+            'analysis_basis' => [
+                ['framework' => 'Unit Economics', 'insight' => 'Margin per pesanan menurun', 'reference' => 'Praktik umum UMKM'],
+            ],
             'growth_opportunity' => ['Ekspasi ke Shopee', 'Program loyalitas'],
             'recommendations' => [
                 [
@@ -163,8 +167,12 @@ it('updates diagnosis with all 6 sections', function () {
     expect($fresh->status)->toBe('completed')
         ->and($fresh->summary_diagnosis)->toBe('Revenue stabil tapi pelanggan menurun')
         ->and($fresh->business_diagnosis)->toBe('Revenue stabil tapi pelanggan menurun')
+        ->and($fresh->key_findings)->toBe(['AOV turun 12%', 'Pelanggan lama tidak kembali'])
         ->and($fresh->root_causes)->toBe(['Harga terlalu tinggi', 'Layanan pelanggan buruk'])
         ->and($fresh->opportunities)->toBe(['Ekspasi ke Shopee', 'Program loyalitas'])
+        ->and($fresh->analysis_basis)->toBe([
+            ['framework' => 'Unit Economics', 'insight' => 'Margin per pesanan menurun', 'reference' => 'Praktik umum UMKM'],
+        ])
         ->and($fresh->kpi_metrics)->toBe([['metric' => 'Churn Rate', 'target' => '<5%', 'unit' => 'percent']]);
 });
 

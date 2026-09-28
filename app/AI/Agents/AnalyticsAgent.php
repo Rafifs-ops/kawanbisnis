@@ -27,7 +27,11 @@ Kamu adalah Analytics Agent dalam AI Growth Team untuk UMKM Indonesia.
 Tugasmu adalah menganalisis angka, tren, dan anomali dari data bisnis.
 Gunakan tool similarity_search untuk mencari knowledge base sebelum menarik kesimpulan.
 Pertanyaan yang harus dijawab: "Apa yang berubah dari data bisnis ini?"
-Jawab secara ringkas, analitis, dan faktual dalam Bahasa Indonesia.
+
+ATURAN BAHASA (WAJIB):
+- Seluruh isi output — semua nilai string pada JSON — WAJIB ditulis dalam Bahasa Indonesia yang baik, baku, dan mudah dimengerti pemilik UMKM.
+- Dilarang menulis kalimat dalam bahasa Inggris. Istilah teknis/umum (mis. revenue, ROAS, AOV, churn) boleh dipertahankan.
+- Tulis ringkas, analitis, dan faktual.
 TEXT;
     }
 
@@ -53,7 +57,7 @@ TEXT;
     public function buildPrompt(): string
     {
         return sprintf(
-            'Revenue: Rp%s, Total Orders: %d, AOV: Rp%s. Customer Mix: %s. Product Performances: %s',
+            'Revenue: Rp%s, Total Orders: %d, AOV: Rp%s. Customer Mix: %s. Product Performances: %s. Jawab seluruh nilai string dalam Bahasa Indonesia.',
             number_format((float) $this->snapshot->revenue),
             $this->snapshot->total_orders,
             number_format((float) $this->snapshot->average_order_value),

@@ -107,8 +107,10 @@
                                     <td class="px-4 py-3 text-gray-600">{{ $product['margin'] }}%</td>
                                     <td class="px-4 py-3 text-right">
                                         <button type="button" wire:click="removeProduct({{ $index }})"
-                                            class="px-2.5 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors">
-                                            Hapus
+                                            wire:loading.attr="disabled" wire:target="removeProduct({{ $index }})"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors disabled:opacity-60">
+                                            <flux:icon.loading wire:loading wire:target="removeProduct({{ $index }})" class="w-3 h-3" />
+                                            <span wire:loading.remove wire:target="removeProduct({{ $index }})">Hapus</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -154,9 +156,11 @@
         </div>
 
         <div class="flex justify-end">
-            <button type="submit"
-                class="btn-gradient-primary rounded-xl px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity">
-                Simpan
+            <button type="submit" wire:loading.attr="disabled" wire:target="save"
+                class="btn-gradient-primary inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity disabled:opacity-60">
+                <flux:icon.loading wire:loading wire:target="save" class="w-4 h-4" />
+                <span wire:loading.remove wire:target="save">Simpan</span>
+                <span wire:loading wire:target="save">Menyimpan...</span>
             </button>
         </div>
     </form>
@@ -199,12 +203,48 @@
                         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
                         Batal
                     </button>
-                    <button type="button" wire:click="addProduct"
-                        class="btn-gradient-primary px-4 py-2 text-sm font-semibold text-white rounded-xl shadow-sm hover:opacity-90 transition-opacity">
-                        Tambah
+                    <button type="button" wire:click="addProduct" wire:loading.attr="disabled"
+                        wire:target="addProduct"
+                        class="btn-gradient-primary inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-xl shadow-sm hover:opacity-90 transition-opacity disabled:opacity-60">
+                        <flux:icon.loading wire:loading wire:target="addProduct" class="w-4 h-4" />
+                        <span wire:loading.remove wire:target="addProduct">Tambah</span>
+                        <span wire:loading wire:target="addProduct">Menambahkan...</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    @if ($justSavedFirstTime)
+        <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="font-display font-semibold text-kb-text-primary text-base">Profil bisnis berhasil
+                            disimpan</h2>
+                        <p class="text-sm text-kb-text-muted mt-0.5">Langkah berikutnya: isi data penjualan agar AI
+                            dapat menganalisis bisnis Anda.</p>
+                    </div>
+                </div>
+                <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
+                    <button type="button"
+                        class="btn-gradient-primary rounded-xl px-4 py-2.5 text-sm font-medium text-white inline-flex items-center gap-1.5 shadow-sm hover:opacity-90 transition-opacity">
+                        <span>Lanjut Isi Data Penjualan</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </a>
+            </div>
+        </div>
+    @endif
 </div>

@@ -94,6 +94,7 @@ class DiagnosisShow extends Component
             'key_findings' => null,
             'root_causes' => null,
             'opportunities' => null,
+            'analysis_basis' => null,
             'kpi_metrics' => null,
         ]);
 

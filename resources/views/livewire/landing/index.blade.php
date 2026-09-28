@@ -5,7 +5,7 @@
 
         <div class="relative max-w-7xl mx-auto px-6 py-24">
             <div class="text-center">
-                <div class="reveal mb-2">
+                <div class="reveal mb-3">
                     <x-app-logo-icon class="mx-auto h-30 w-auto" />
                 </div>
 
@@ -20,7 +20,7 @@
 
                 <div class="reveal reveal-delay-2">
                     <flux:text class="text-lg text-white mb-10 max-w-2xl mx-auto leading-relaxed">
-                        4 agen AI menganalisis bisnis Anda secara menyeluruh — dari data, pelanggan, marketing, hingga strategi — lalu menghasilkan diagnosis dan rencana aksi prioritas.
+                        4 agen AI menganalisis bisnis Anda secara menyeluruh dari data, pelanggan, marketing, hingga strategi lalu menghasilkan diagnosis dan rencana aksi prioritas.
                     </flux:text>
                 </div>
 

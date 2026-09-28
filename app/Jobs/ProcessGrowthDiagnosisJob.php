@@ -106,7 +106,10 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
         $multiAgentFindings = [
             'analytics' => $analyticsRes['key_findings'],
             'customer' => $customerRes['insights'],
-            'marketing' => $marketingRes['opportunities'],
+            'marketing' => [
+                'channel_performance' => $marketingRes['channel_performance'],
+                'opportunities' => $marketingRes['opportunities'],
+            ],
         ];
 
         $strategyAgent = new StrategyAgent($multiAgentFindings, $passport->constraints ?? []);
@@ -118,8 +121,10 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
             'question_answered' => 'Apa rekomendasi prioritas berdasarkan semua temuan?',
             'findings' => [
                 'summary' => $strategyRes['business_diagnosis'] ?? '',
+                'key_findings' => $strategyRes['key_findings'] ?? [],
                 'root_causes' => $strategyRes['root_causes'] ?? [],
                 'opportunities' => $strategyRes['growth_opportunity'] ?? [],
+                'analysis_basis' => $strategyRes['analysis_basis'] ?? [],
                 'kpi_metrics' => $strategyRes['kpi_metrics'] ?? [],
             ],
             'confidence_score' => $strategyRes['confidence_score'] ?? 0.0,
@@ -144,13 +149,15 @@ class ProcessGrowthDiagnosisJob implements ShouldQueue
             ]);
         }
 
-        // 6. Update diagnosis with all 6 sections
+        // 6. Update diagnosis with the strategy output
         $this->diagnosis->update([
             'status' => 'completed',
             'summary_diagnosis' => $strategyRes['business_diagnosis'] ?? '',
             'business_diagnosis' => $strategyRes['business_diagnosis'] ?? null,
+            'key_findings' => $strategyRes['key_findings'] ?? null,
             'root_causes' => $strategyRes['root_causes'] ?? null,
             'opportunities' => $strategyRes['growth_opportunity'] ?? null,
+            'analysis_basis' => $strategyRes['analysis_basis'] ?? null,
             'kpi_metrics' => $strategyRes['kpi_metrics'] ?? null,
         ]);
     }

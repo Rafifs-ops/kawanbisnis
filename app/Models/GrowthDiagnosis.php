@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property list<string>|null $key_findings
  * @property list<string>|null $root_causes
  * @property list<string>|null $opportunities
+ * @property list<array{framework: string, insight: string, reference: string}>|null $analysis_basis
  * @property list<array{metric: string, target: string, unit: string}>|null $kpi_metrics
  * @property-read GrowthGoal $growthGoal
  * @property-read Collection<int, AgentAnalysis> $agentAnalyses
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'key_findings',
     'root_causes',
     'opportunities',
+    'analysis_basis',
     'kpi_metrics',
 ])]
 class GrowthDiagnosis extends Model
@@ -43,6 +45,7 @@ class GrowthDiagnosis extends Model
         'key_findings' => 'array',
         'root_causes' => 'array',
         'opportunities' => 'array',
+        'analysis_basis' => 'array',
         'kpi_metrics' => 'array',
     ];
 

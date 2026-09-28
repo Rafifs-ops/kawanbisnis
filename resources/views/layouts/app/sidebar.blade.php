@@ -96,13 +96,15 @@
                             </svg>
                             {{ __('Settings') }}
                         </a>
-                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                        <form method="POST" action="{{ route('logout') }}" class="w-full" x-data="{ submitting: false }"
+                            @submit="submitting = true">
                             @csrf
-                            <button type="submit"
-                                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors text-left"
+                            <button type="submit" :disabled="submitting"
+                                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors text-left disabled:opacity-60"
                                 data-test="logout-button">
-                                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <flux:icon.loading x-cloak x-show="submitting" class="w-4 h-4 text-red-600" />
+                                <svg x-show="!submitting" class="w-4 h-4 text-red-600" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                 </svg>

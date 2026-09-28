@@ -47,7 +47,8 @@ test('instructions returns non-empty string', function () {
 
     expect($instructions)->toBeString()->not->toBeEmpty()
         ->toContain('Analytics Agent')
-        ->toContain('UMKM');
+        ->toContain('UMKM')
+        ->toContain('Bahasa Indonesia');
 });
 
 test('tools returns similarity search tool', function () {

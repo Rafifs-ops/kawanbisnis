@@ -22,6 +22,13 @@ class GrowthDiagnosisFactory extends Factory
             'key_findings' => [fake()->sentence()],
             'root_causes' => [fake()->sentence()],
             'opportunities' => [fake()->sentence()],
+            'analysis_basis' => [
+                [
+                    'framework' => 'Unit Economics',
+                    'insight' => fake()->sentence(),
+                    'reference' => fake()->sentence(),
+                ],
+            ],
         ];
     }
 }
