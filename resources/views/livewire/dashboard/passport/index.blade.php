@@ -5,26 +5,37 @@
     </div>
 
     @if ($justSavedFirstTime)
-        <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div class="flex items-start gap-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="font-display font-semibold text-kb-text-primary text-base">Profil bisnis berhasil
-                            disimpan</h2>
-                        <p class="text-sm text-kb-text-muted mt-0.5">Langkah berikutnya: isi data penjualan agar AI
-                            dapat menganalisis bisnis Anda.</p>
-                    </div>
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100">
+            <div
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-6 text-center space-y-4">
+                <button type="button" wire:click="dismissFirstSaveModal" aria-label="Tutup"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div
+                    class="mx-auto w-14 h-14 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </div>
-                <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
+
+                <div class="space-y-1.5">
+                    <h2 class="font-display text-lg font-bold text-kb-text-primary">Profil bisnis berhasil disimpan
+                    </h2>
+                    <p class="text-sm text-kb-text-muted">Langkah berikutnya: segera isi data penjualan agar AI dapat
+                        menganalisis bisnis Anda.</p>
+                </div>
+
+                <a href="{{ route('snapshot.create') }}" wire:navigate class="block">
                     <button type="button"
-                        class="btn-gradient-primary rounded-xl px-4 py-2.5 text-sm font-medium text-white inline-flex items-center gap-1.5 shadow-sm hover:opacity-90 transition-opacity">
+                        class="btn-gradient-primary w-full rounded-xl px-4 py-2.5 text-sm font-medium text-white inline-flex items-center justify-center gap-1.5 shadow-sm hover:opacity-90 transition-opacity">
                         <span>Lanjut Isi Data Penjualan</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -32,6 +43,46 @@
                         </svg>
                     </button>
                 </a>
+
+                <button type="button" wire:click="dismissFirstSaveModal"
+                    class="text-xs font-medium text-kb-text-muted hover:text-kb-text-primary transition-colors">
+                    Nanti saja
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if ($showUpdateSavedModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100">
+            <div
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-6 text-center space-y-4">
+                <button type="button" wire:click="dismissFirstSaveModal" aria-label="Tutup"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div
+                    class="mx-auto w-14 h-14 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+
+                <div class="space-y-1.5">
+                    <h2 class="font-display text-lg font-bold text-kb-text-primary">Data Berhasil Diupdate</h2>
+                    <p class="text-sm text-kb-text-muted">Perubahan profil bisnis Anda sudah tersimpan.</p>
+                </div>
+
+                <button type="button" wire:click="dismissFirstSaveModal"
+                    class="text-xs font-medium text-kb-text-muted hover:text-kb-text-primary transition-colors">
+                    Tutup
+                </button>
             </div>
         </div>
     @endif
@@ -107,10 +158,13 @@
                                     <td class="px-4 py-3 text-gray-600">{{ $product['margin'] }}%</td>
                                     <td class="px-4 py-3 text-right">
                                         <button type="button" wire:click="removeProduct({{ $index }})"
-                                            wire:loading.attr="disabled" wire:target="removeProduct({{ $index }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="removeProduct({{ $index }})"
                                             class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors disabled:opacity-60">
-                                            <flux:icon.loading wire:loading wire:target="removeProduct({{ $index }})" class="w-3 h-3" />
-                                            <span wire:loading.remove wire:target="removeProduct({{ $index }})">Hapus</span>
+                                            <flux:icon.loading wire:loading
+                                                wire:target="removeProduct({{ $index }})" class="w-3 h-3" />
+                                            <span wire:loading.remove
+                                                wire:target="removeProduct({{ $index }})">Hapus</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -214,37 +268,4 @@
             </div>
         </div>
     </div>
-
-    @if ($justSavedFirstTime)
-        <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div class="flex items-start gap-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="font-display font-semibold text-kb-text-primary text-base">Profil bisnis berhasil
-                            disimpan</h2>
-                        <p class="text-sm text-kb-text-muted mt-0.5">Langkah berikutnya: isi data penjualan agar AI
-                            dapat menganalisis bisnis Anda.</p>
-                    </div>
-                </div>
-                <a href="{{ route('snapshot.create') }}" wire:navigate class="shrink-0">
-                    <button type="button"
-                        class="btn-gradient-primary rounded-xl px-4 py-2.5 text-sm font-medium text-white inline-flex items-center gap-1.5 shadow-sm hover:opacity-90 transition-opacity">
-                        <span>Lanjut Isi Data Penjualan</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-                </a>
-            </div>
-        </div>
-    @endif
 </div>

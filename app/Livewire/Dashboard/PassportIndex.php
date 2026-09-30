@@ -4,7 +4,6 @@ namespace App\Livewire\Dashboard;
 
 use App\Models\BusinessPassport;
 use App\Models\User;
-use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -41,6 +40,8 @@ class PassportIndex extends Component
     public ?BusinessPassport $passport = null;
 
     public bool $justSavedFirstTime = false;
+
+    public bool $showUpdateSavedModal = false;
 
     public function mount(): void
     {
@@ -83,6 +84,7 @@ class PassportIndex extends Component
 
         if ($this->passport) {
             $this->passport->update($data);
+            $this->showUpdateSavedModal = true;
         } else {
             /** @var User $user */
             $user = auth()->user();
@@ -92,8 +94,12 @@ class PassportIndex extends Component
         }
 
         $this->justSavedFirstTime = $isFirstSave;
+    }
 
-        Flux::toast(variant: 'success', text: 'Profil bisnis berhasil disimpan.');
+    public function dismissFirstSaveModal(): void
+    {
+        $this->justSavedFirstTime = false;
+        $this->showUpdateSavedModal = false;
     }
 
     public function addProduct(): void
