@@ -49,8 +49,10 @@ class GoogleController extends Controller
                         'email' => $googleUser->getEmail(),
                         'google_id' => $googleUser->getId(),
                         'password' => null, // Kosong karena login via OAuth
-                        'email_verified_at' => now(),
                     ]);
+
+                    // Google sudah memverifikasi email, jadi tandai langsung terverifikasi.
+                    $newUser->markEmailAsVerified();
 
                     Auth::login($newUser);
                 }

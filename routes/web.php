@@ -41,6 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('dashboard/check-in/{actionPlan}/create', CheckInCreate::class)->name('check-in.create');
 });
 
-Route::get('/ping', fn() => response('pong', 200));
+Route::get('/ping', fn () => response('pong', 200));
 
 require __DIR__.'/settings.php';
